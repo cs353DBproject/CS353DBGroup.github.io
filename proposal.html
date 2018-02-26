@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project Proposal - Group 31</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" crossorigin="anonymous">
     <style type="text/css">
         .pdf-link {
             font-size: 18px;
@@ -12,6 +13,24 @@
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox({
+                    maxWidth: 5000,
+                    onContentLoaded: function() {
+                        $('.modal-dialog').css("max-width", "5000px");
+                        $('.modal-content').css("background-color", "rgba(255, 255, 255, 0)");
+                        $('.modal-content').css("border", "none");
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -38,7 +57,7 @@
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                 </ul>
-                <a class="nav-link text-success alert-link h-100" href="#">Project Github Page &#128279;</a>
+                <a class="nav-link text-success alert-link h-100" href="https://github.com/CS353DBGroup">Project Github Page &#128279;</a>
             </div>
         </nav>
     </header>
@@ -49,15 +68,111 @@
                 <h2 class="mt-5">
                     Project Proposal
                     <small class="text-muted">Group 31</small>
-                    <a class="float-right pdf-link" href="#">Download in PDF Format</a>
+                    <a class="float-right pdf-link" href="docs/Proposal.pdf">Download in PDF Format</a>
                 </h2>
                 <hr>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <h4>Introduction</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at nunc velit. Proin tristique tortor non sollicitudin bibendum. Suspendisse pellentesque lacus lectus, ac eleifend neque vestibulum sed. Donec nibh tortor, gravida sed odio posuere, faucibus convallis odio. Aenean quis sapien vel magna bibendum sodales. Suspendisse a vehicula enim, egestas condimentum ex. Maecenas ultrices, nulla accumsan egestas mattis, nulla sem semper mauris, quis tincidunt nulla lorem id lacus. Ut accumsan non dui quis sollicitudin. Suspendisse potenti.</p>
+                <h3>1. Introduction</h3>
+                <p>This Project proposal is for a Social Network for Check-ins. It will contain a brief description of the application we make, show the non-functional and functional requirements, discuss limitations and restrictions of our database and how system is going to be integrated will be shown with the  E/R model of our database.</p>
+                <p>The proposal starts with Project Description which contains brief information about the Project and we will try to Show how database will be used in this Project. It will continue with an explanation of why we need a database for Social Network for Check-ins and how we can use database for this project.</p>
+                <p>The proposal continues with requirements. In this part, functional and nonfunctional requirements will be examined and there will be an explanation for our pseudo requirements. Functional requirements are a must for setting up the functionalities and properties of project, which will be acquire by analyzing the users.  The nonfunctional requirements will be about the performance, reliability, security and usability goals for our system. In pseudo requirements , we will examine the technologies we will use in our system. In the limitations section, we will discuss the boundaries of our system.</p>
+                <p>At the end of the proposal, we will have our E/R diagram which is a basis for our database system.</p>
+                
+                <h3>2. Project Description</h3>
+                <p>This application will be a web based system for making check-ins in different places, make comments about places and rating the places by their judgment, which is similar to FourSquare.   The system will be used by regular people and owners of the places. System will include different ID’s for different users which they will login and add friends with those ID’s. There will be a password for each user which will be required in the login page. There will be also information about the names, comments and rates about the places in our database.</p>
+                <p>Regular users will be able to see those data in the application and change them according to their want by making a comment or rating the place they go. They will be able to search for places and friends and see the profiles of their friends, add friends by sending a friend request and see friend requests. In addition to this, application will have a news feed page, which will contains regular users’ friends’ latest check-ins, comments and ratings about the place chronologically. Regular users will also be able to make comments to their friends’ check-ins.</p>
+                <p>Our system will be also used by the owners of the places. Owners will have a permission to add their places in our database, so that regular users can search the name of the place and check-in.</p>
+                <p>All users will be able to change settings in the application’s setting menu, which will have options for security and privacy. Users also be able to change their password, name, and e-mail address in this menu.</p>
+                <p>Also, when users make a check-in in a location, application will notify the user if one of their friends’ ever visited the place before. So that user can see the rating and comment of his or her friend.</p>
+                
+                <h3>3. Requirements</h3>
+                <h4>3.1 Functional Requirements</h4>
+                <h5>3.1.1 User</h5>
+                <p>
+                    <ul>
+                        <li>Users can arrange their profile</li>
+                        <li>Users can change their privacy settings</li>
+                        <li>Users can make check-in</li>
+                        <li>Users can search for friends and locations</li>
+                        <li>Users can add and remove friends</li>
+                        <li>Users can comment on the check-ins and locations</li>
+                        <li>Users can change their password and username</li>
+                        <li>Users can like or dislike a location</li>
+                        <li>Users can identify their favorite location</li>
+                        <li>Users can login or sign up</li>
+                        <li>Users can see their friends’ previous check-ins on specific location</li>
+                        <li>Users can report comments on their locations</li>
+                    </ul>
+                </p>
+                <h5>3.1.2 Location Manager</h5>
+                <p>
+                    <ul>
+                        <li>Managers can create a location </li>
+                        <li>Managers can arrange location’s page</li>
+                        <li>Managers can see people who made checkin in their location</li>
+                        <li>Managers can comment on a check-in </li>
+                        <li>Managers can put a photo to their location page</li>
+                    </ul>
+                </p>
+                <h4>3.2 Non-Functional Requirements</h4>
+                <h5>3.2.1 Security</h5>
+                <p>
+                    <ul>
+                        <li>System gives opportunity users  to prevent their locations from non-friend users.</li>
+                        <li>Users can report comments for security</li>
+                        <li>Username and password will be unique therefore everybody has their own accounts</li>
+                    </ul>
+                </p>
+                <h5>3.2.2 Performance</h5>
+                <p>
+                    <ul>
+                        <li>System will return each operation immediately</li>
+                    </ul>
+                </p>
+                <h5>3.2.3 Usability</h5>
+                <p>
+                    <ul>
+                        <li>User friendly UI</li>
+                        <li>Users can easily find their friends with their names(Easy search)</li>
+                        <li>Different search bars with different purposes(Locations and users)</li>
+                        <li>Different modes for users and managers</li>
+                    </ul>
+                </p>
+                <h5>3.2.4 Scalability</h5>
+                <p>
+                    <ul>
+                        <li>Ability to grow in size of data without losing performance</li>
+                    </ul>
+                </p>
+                <h4>3.3 Constraints (Pseudo Requirements)</h4>
+                <p>
+                    <ul>
+                        <li>MySQL will be used as the Structured Query Language.</li>
+                        <li>PHP and javascript will be used for frontend and backend development.</li>
+                    </ul>
+                </p>
+                
+                <h3>4. Limitations</h3>
+                <p>
+                    <ul>
+                        <li>Location Managers cannot add friends</li>
+                        <li>A user cannot change location specification</li>
+                        <li>A user cannot see a private account’s check-ins</li>
+                        <li>A command comment cannot be more than 400 character</li>
+                        <li>A Location can have at most 5 image</li>
+                        <li>A check-in cannot have more than 100 command</li>
+                        <li>Username and password cannot be longer than 32 character and also they cannot be less than 6</li>
+                    </ul>
+                </p>
+
+                <h3>5. Entity Relationship Model</h3>
+                <p>(Please click on image to see it in original size. You can close it with ESC key or by clicking somewhere else)</p>
+                <a href="er.png" data-toggle="lightbox">
+                    <img src="er.png" class="img-fluid">
+                </a>
             </div>
         </div>
     </main>
