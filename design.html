@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Design - Group 31</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" crossorigin="anonymous">
+    <style type="text/css">
+        .pdf-link {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        pre {
+            white-space: pre-wrap;       /* Since CSS 2.1 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox({
+                    maxWidth: 5000,
+                    onContentLoaded: function() {
+                        $('.modal-dialog').css("max-width", "5000px");
+                        $('.modal-content').css("background-color", "rgba(255, 255, 255, 0)");
+                        $('.modal-content').css("border", "none");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">Group 31 Project Website</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="proposal.html">Project Proposal <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="design.html">Project Design</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Final Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+                <a class="nav-link text-success alert-link h-100" href="https://github.com/CS353DBGroup">Project Github Page &#128279;</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main role="main" class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <h2 class="mt-5">
+                    Project Design
+                    <small class="text-muted">Group 31</small>
+                    <a class="float-right pdf-link" href="docs/Design.pdf">Download in PDF Format</a>
+                </h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h3>1. Revised Entity Relationship Model</h3>
+                <p>(Please click on image to see it in original size. You can close it with ESC key or by clicking somewhere else)</p>
+                <a href="imgs/der.png" data-toggle="lightbox">
+                    <img src="imgs/der.png" class="img-fluid">
+                </a>
+                <p>
+                    We have revised our E/R model based on the feedback given on Proposal of project as follows:
+                    <ul>
+                        <li>Relations between several User records turned into relation on entity User and not shown as separate entities anymore. In Proposal, friends and friend_reqs relations were shown as entities. Those are now relations on User entity and the way the relation happens shown by column names written next to relationship connectors.</li>
+                        <li>A new relation called messages added as suggested to provide messaging feature. It is a relation on User entity. Extra information that needs to be stored is shown using a box connected to the relation.</li>
+                        <li>Relations between Comment, GeneralUser, Location and Checkin turned in to ternary relations as suggested. Now, Comment-GeneralUser-Location and Comment-GeneralUser-Checkin are related through ternary relations called loc_comments and checkin_comments respectively.</li>
+                        <li>Relationships related to Comment entity now are connected to GeneralUser entity instead of User entity to provide comment feature for location admins too, as suggested.</li>
+                        <li>A new relation called comment_reports added to provide reporting feature as suggested. This relation is connected to GeneralUser to make location admins be able to report like normal users.</li>
+                        <li>A new entity called Photo added to provide adding photos of locations by admins and ‘Pictures’ column is removed from Location entity as suggested. A relation between Photo and Location added.</li>
+                        <li>Foreign key in LocationAdmin is not shown on diagram anymore. New columns added to entity LocationAdmin as suggested.</li>
+                        <li>Relations between GeneralUser and User, LocationAdmin entities turned into is-a relation as suggested.</li>
+                        <li>UserSettings entity was shown as a weak entity in Proposal and the relation was suggested to be shown as total participation. Since User entity and UserSettings entity had One-to-One relation, we decided to move columns of UserSettings to User entity and removed it.</li>
+                        <li>The relations between User, Checkin and Location was suggested to be turned into a ternary relation. However after we determined the features and constraints of our application we decided to show relations separately. There are two reasons for this. First of all Checkin-User and Checking-Location both have Many-to-One relation between them. Since two arrows (Ones) in a ternary relation would cause ambiguity, it would be shown in a more clear way with separate relations. Secondly, Checkin entity has total participation in both relations and the relations are Many-to-One. We wanted to show relation this way since it shows clearly that relations can be represented as a column in Checkin entity without null values or using extra tables.</li>
+                        <li>Several cardinality constraints changed as suggested. Favourite locations relation changed to Many-to-Many from One-to-One since a user can have multiple favourite locations and a location can be favourite of many users. Relations on User entity changed to Many-to-Many since a user can be related to many in those relations. In Proposal, those were shown as either One-to-One or One-to-Many. Checkin likes relation changed to Many-to-Many from One-to-Many considering similar reasons for favourite locations.</li>
+                        <li>New entities and relations added to provide new features as suggested. A relation added to provide comment likes feature. Location rating feature added through a new column. Messaging feature between users added. Ability to report comments, for both normal users and location admins, added through a new relation.</li>
+                    </ul>
+                </p>
+                
+                <h3>2. Relation Schemas</h3>
+                <h4>2.1 GeneralUser</h4>
+                <p><b>Relational Model</b></p>
+                <p>GeneralUser(<u>id</u>, username, email, password, secret_question, answer)</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>id -> username, email, password, secret_question, answer<br>
+                username -> id, email, password, secret_question, answer<br>
+                email -> id, username, password, secret_question, answer</p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id), (username), (email)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE GeneralUser (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, username VARCHAR(64) NOT NULL UNIQUE, email VARCHAR(128) NOT NULL UNIQUE, password VARCHAR(32) NOT NULL, secret_question INT(2) NOT NULL, answer VARCHAR(128) NOT NULL) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.2 User</h4>
+                <p><b>Relational Model</b></p>
+                <p>User(<u>id</u>, username, email, password, secret_question, answer, register_date, birth_date, privacy, profile_pic, bio)</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> username, email, password, secret_question, answer, register_date, birth_date, privacy, profile_pic, bio<br>
+                username -> id, email, password, secret_question, answer, register_date, birth_date, privacy, profile_pic, bio<br>
+                email -> id, username, password, secret_question, answer, register_date, birth_date, privacy, profile_pic, bio
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id), (username), (email)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE User (user_id INT NOT NULL PRIMARY KEY, register_date TIMESTAMP NOT NULL, birth_date DATE NOT NULL, privacy BOOLEAN NOT NULL, profile_pic VARCHAR(128), bio VARCHAR(512), FOREIGN KEY (user_id) REFERENCES GeneralUser(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.3 LocationAdmin</h4>
+                <p><b>Relational Model</b></p>
+                <p>LocationAdmin(<u>id</u>, username, email, password, secret_question, answer, role, secondary_email)</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> username, email, password, secret_question, answer, role, secondary_email<br>
+                username -> id, email, password, secret_question, answer, role, secondary_email<br>
+                email -> id, username, password, secret_question, answer, role, secondary_email
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id), (username), (email)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE LocationAdmin (user_id INT NOT NULL PRIMARY KEY, role VARCHAR(64) NOT NULL, secondary_email VARCHAR(128), FOREIGN KEY (user_id) REFERENCES GeneralUser(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.4 Location</h4>
+                <p><b>Relational Model</b></p>
+                <p>Location(<u>id</u>, admin_id, name, address, checkin_count, like_count, info)<br>
+                Foreign key admin_id references LocationAdmin</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> admin_id, name, address, checkin_count, like_count, info<br>
+                admin_id -> id, name, address, checkin_count, like_count, info
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id), (admin_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE Location (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, admin_id INT NOT NULL UNIQUE, name VARCHAR(128) NOT NULL, address VARCHAR(256) NOT NULL, checkin_count INT UNSIGNED NOT NULL, like_count INT UNSIGNED NOT NULL, info VARCHAR(512) NOT NULL, FOREIGN KEY (admin_id) REFERENCES LocationAdmin(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.5 Photo</h4>
+                <p><b>Relational Model</b></p>
+                <p>Photo(<u>id</u>, loc_id, title)<br>
+                Foreign key loc_id references Location</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> loc_id, title
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE Photo (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, loc_id INT NOT NULL, title VARCHAR(256) NOT NULL, FOREIGN KEY (loc_id) REFERENCES Location(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.6 Checkin</h4>
+                <p><b>Relational Model</b></p>
+                <p>Checkin(<u>id</u>, loc_id, user_id, time, text, rate, num_of_likes)<br>
+                Foreign key loc_id references Location<br>
+                Foreign key user_id references User</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> loc_id, user_id, time, text, rate, num_of_likes
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE Checkin (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, loc_id INT NOT NULL, user_id INT NOT NULL, time TIMESTAMP NOT NULL, text VARCHAR(256) NOT NULL, rate INT(1) NOT NULL, num_of_likes INT NOT NULL, FOREIGN KEY (loc_id) REFERENCES Location(id), FOREIGN KEY (user_id) REFERENCES User(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.7 Comment</h4>
+                <p><b>Relational Model</b></p>
+                <p>Comment(<u>id</u>, user_id, text, time)<br>
+                Foreign key user_id references GeneralUser</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                id -> user_id, text, time
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE Comment (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, text VARCHAR(512) NOT NULL, time TIMESTAMP NOT NULL, FOREIGN KEY (user_id) REFERENCES GeneralUser(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.8 friends</h4>
+                <p><b>Relational Model</b></p>
+                <p>friends(<u>person1_id, person2_id</u>)<br>
+                Foreign key person1_id and person2_id references User</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(person1_id, person2_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE friends (person1_id INT NOT NULL, person2_id INT NOT NULL, PRIMARY KEY (person1_id, person2_id), FOREIGN KEY (person1_id) REFERENCES User(user_id), FOREIGN KEY (person2_id) REFERENCES User(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.9 friend_reqs</h4>
+                <p><b>Relational Model</b></p>
+                <p>friend_reqs(<u>sender, receiver</u>, date)<br>
+                Foreign key sender and receiver references User</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                sender, receiver -> date
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(sender, receiver)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE friend_reqs (sender INT NOT NULL, receiver INT NOT NULL, date TIMESTAMP NOT NULL, PRIMARY KEY (sender, receiver), FOREIGN KEY (sender) REFERENCES User(user_id), FOREIGN KEY (receiver) REFERENCES User(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.10 messages</h4>
+                <p><b>Relational Model</b></p>
+                <p>messages(<u>sender, receiver</u>, message, date)<br>
+                Foreign key sender and receiver references User</p>
+                <p><b>Functional Dependencies</b></p>
+                <p>
+                sender, receiver -> message, date
+                </p>
+                <p><b>Candidate Keys</b></p>
+                <p>{(sender, receiver)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE messages (sender INT NOT NULL, receiver INT NOT NULL, message VARCHAR(512) NOT NULL, date TIMESTAMP NOT NULL, PRIMARY KEY (sender, receiver), FOREIGN KEY (sender) REFERENCES User(user_id), FOREIGN KEY (receiver) REFERENCES User(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.11 checkin_likes</h4>
+                <p><b>Relational Model</b></p>
+                <p>checkin_likes(<u>checkin_id, user_id</u>)<br>
+                Foreign key checkin_id references Checkin<br>
+                Foreign key user_id references User</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(checkin_id, user_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE checkin_likes (checkin_id INT NOT NULL, user_id INT NOT NULL, PRIMARY KEY (checkin_id, user_id), FOREIGN KEY (checkin_id) REFERENCES Checkin(id), FOREIGN KEY (user_id) REFERENCES User(user_id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.12 checkin_comments</h4>
+                <p><b>Relational Model</b></p>
+                <p>checkin_comments(<u>checkin_id, comment_id</u>)<br>
+                Foreign key checkin_id references Checkin<br>
+                Foreign key comment_id references Comment</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(checkin_id, comment_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE checkin_comments (checkin_id INT NOT NULL, comment_id INT NOT NULL, PRIMARY KEY (checkin_id, comment_id), FOREIGN KEY (checkin_id) REFERENCES Checkin(id), FOREIGN KEY (comment_id) REFERENCES Comment(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.13 loc_comments</h4>
+                <p><b>Relational Model</b></p>
+                <p>loc_comments(<u>loc_id, comment_id</u>)<br>
+                Foreign key loc_id references Location<br>
+                Foreign key comment_id references Comment</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(loc_id, comment_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE loc_comments (loc_id INT NOT NULL, comment_id INT NOT NULL, PRIMARY KEY (loc_id, comment_id), FOREIGN KEY (loc_id) REFERENCES Location(id), FOREIGN KEY (comment_id) REFERENCES Comment(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.14 comment_reports</h4>
+                <p><b>Relational Model</b></p>
+                <p>comment_reports(<u>user_id, comment_id</u>)<br>
+                Foreign key user_id references GeneralUser<br>
+                Foreign key comment_id references Comment</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(user_id, comment_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE comment_reports (user_id INT NOT NULL, comment_id INT NOT NULL, PRIMARY KEY (user_id, comment_id), FOREIGN KEY (user_id) REFERENCES GeneralUser(id), FOREIGN KEY (comment_id) REFERENCES Comment(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.15 favourite_locs</h4>
+                <p><b>Relational Model</b></p>
+                <p>favourite_locs(<u>user_id, loc_id</u>)<br>
+                Foreign key user_id references User<br>
+                Foreign key loc_id references Location</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(user_id, loc_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE favourite_locs (user_id INT NOT NULL, loc_id INT NOT NULL, PRIMARY KEY (user_id, loc_id), FOREIGN KEY (user_id) REFERENCES User(user_id), FOREIGN KEY (loc_id) REFERENCES Location(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h4>2.16 comment_likes</h4>
+                <p><b>Relational Model</b></p>
+                <p>comment_likes(<u>user_id, comment_id</u>)<br>
+                Foreign key user_id references GeneralUser<br>
+                Foreign key comment_id references Comment</p>
+                <!--<p><b>Functional Dependencies</b></p>
+                <p>
+                
+                </p>-->
+                <p><b>Candidate Keys</b></p>
+                <p>{(user_id, comment_id)}</p>
+                <p><b>Normal Form</b></p>
+                <p>BCNF</p>
+                <p><b>Table Definition</b></p>
+                <p>
+<pre>
+CREATE TABLE comment_likes (user_id INT NOT NULL, comment_id INT NOT NULL, PRIMARY KEY (user_id, comment_id), FOREIGN KEY (user_id) REFERENCES GeneralUser(id), FOREIGN KEY (comment_id) REFERENCES Comment(id)) ENGINE=INNODB;
+</pre>
+                </p>
+                
+                <h3>3. Functional Dependencies and Normalization of Tables</h3>
+                <p>With the section 2 we used Boyce-Codd normal form for normalization of tables when we create out tables.</p>
+                
+                <h3>4. Functional Components</h3>
+                
+                <h4>4.1 Use Cases/Scenarios</h4>
+                <p>We have 3 different users in the project. Users, location admins and new users. Each will have different functions, which can be seen in different scenarios down below. Since new users cannot been able to get in our system without signing up, they are not in our ER model.</p>
+                
+                <h5>4.1.1 Users</h5>
+                <p>These types of general users are the ones who use our social media for the purposes of entertaining or getting information about the places. They can search for places and make check-ins in them, see the ratings, make comments, give ratings about a place. They can add friends, accept, decline a friends request or delete a friend, look up for their friends’ check-in’s and make comments about that check-ins. Friends can send messages to themselves. Users can like comments and check-ins. They can also change their passwords, privacy level and profile picture in the settings menu.</p>
+                <p><b>View a place: </b>Users can search for a place by using the search bar. Or click on a place’s name on the news feed page.</p>
+                <p><b>Make/Delete a check-in: </b>Users can check-in in a place by visiting a place’s page and click on the check-in button in the page. Users can also delete a check-in after they post it.</p>
+                <p><b>See the ratings: </b>Users can see the ratings of a place on the place’s page.</p>
+                <p><b>Make comments: </b>Users can make comments about a place after they check-in in them, by clicking on the “Make Comment” button on place’s page.</p>
+                <p><b>Give ratings: </b>Users can give ratings to a place after they check-in in the place, by clicking on the “Give Rating!” button on the place’s page.</p>
+                <p><b>View a friend: </b>Users can view a friend by moving to “Friends” page, and search for a new friend in this page.</p>
+                <p><b>Add friend: </b>Users can add a friend by visiting a user’s personal page, via the help of search bar in the “Friends” page.</p>
+                <p><b>Accept or Decline friend request: </b>Users can accept or decline a friends request by visiting the Friends Request page.</p>
+                <p><b>Delete friend: </b>Users can delete a friend by visiting a “Friends” page, by clicking the “Delete Friend” button.</p>
+                <p><b>Look up for friends’ check-ins: </b>Users can look up for their friends’ check-ins in the news feed page, which is the default page for a user when they log in in our system. Or by visiting their personal page via the help of search bar in the “Friends” page.</p>
+                <p><b>Make comment to a friend’s check-in: </b>Users can make a comment to their friends’ check-ins by clicking on the “Make Comment” button, after they look up for friends’ check-ins.</p>
+                <p><b>Send Message: </b>Users can send a message to a friend by using the “Messages” menu.</p>
+                <p><b>Like comment/Check-in: </b>Users can like a comment or a check-in by clicking the “Like” button on the page, after they reach to a comment or a check-in, in their news feed page or visiting a friend’s profile.</p>
+                <p><b>Change Password: </b>Users can change their passwords in the “Settings” menu by clicking the “Change Password” button.</p>
+                <p><b>Change Privacy Level: </b>Users can adjust their privacy settings in the “Settings” menu. They can choose to publicly open their profiles or making it private so that only his/her friends can see the profile of the user.</p>
+                <p><b>Add/Change Profile Picture: </b>Users can add or change profile picture in the “Settings”  menu by clicking “Change Profile Pic” button.</p>
+                
+                <a href="imgs/uc1.png" data-toggle="lightbox">
+                    <img src="imgs/uc1.png" class="img-fluid">
+                </a>
+                
+                <h5>4.1.2 Location Admins</h5>
+                <p>Locations admins are responsible for adding their places into our system.  They can add their places by giving the name of their places and addresses. They can upload photos for their places, see the check-in counts and the ratings which the users give. They will have also a second email address, in case of forgetting their passwords.</p>
+                <p><b>Add place: </b>Location Admins can add their register their places by clicking the “Register a Place” button in their main menu.</p>
+                <p><b>Give a name: </b>Location Admins can add the name of their places to our system by filling the “Name” section when they are in the “Register a Place” menu.</p>
+                <p><b>Add Address: </b>Location Admins can add the address of their place by filling the “Address” section when they are in the “Register a Place” menu.</p>
+                <p><b>Upload Pictures: </b>Location admins can upload the pictures of their places by clicking the “Upload a Picture” button in their main menu.</p>
+                <p><b>See check-in count: </b>Check-in count will be displayed for their places, in their main menu.</p>
+                <p><b>See ratings: </b>Ratings will be displayed for their places, in their main menu.</p>
+                <p><b>Get a new password: </b>Location Admins can obtain a new password, by clicking the “Forgot Password” button. After they click, a new password will be send to the Location Admin’s secondary email address.</p>
+                
+                <a href="imgs/uc2.png" data-toggle="lightbox">
+                    <img src="imgs/uc2.png" class="img-fluid">
+                </a>
+                
+                <h5>4.1.2 New Users</h5>
+                <p>New Users will be the people who want to sign up to our system. After they access to our system’s web page, they can sign up as a User or Location Admin. After the signing up process, they will no longer be a New User. If New User signs up as a Location Admin, he/she has to enter a secondary email for changing or retrieving password for their accounts.</p>
+                <p><b>Sign up: </b>New Users can Sign up by clicking the “Create your Account” or “Create your Manager Account” buttons in the website. They can sign up as a new User and Location Admin. After they click, a new page will load and they will enter their name, surname, user name, email, password and a secret question. After they complete the sign up procedure, system will give the new user a unique ID and store the registration date to the database.</p>
+                <p>Since new users are not a part of the system, they will not be able to access to our system. So that, they will not have any functions other than sign up.</p>
+                
+                <a href="imgs/uc3.png" data-toggle="lightbox">
+                    <img src="imgs/uc3.png" class="img-fluid">
+                </a>
+                
+                <h4>4.2 Algorithms</h4>
+                
+                <h5>4.2.1 Search Related Algorithms</h5>
+                <p>Users can search through our system with 2 different types. They can search for a location by using the search bar on the upside of the page. Search bar will only look to locations when they use search bar. However, they can also search for a person by using the search bar on the “Friends” page. This particular search bar will only look up for people in our system.</p>
+                
+                <h5>4.2.2 Logical Requirements</h5>
+                <p>Our application will have many logical requirements. For example, a user cannot make an empty comment, sign up with an empty name, username or password. We will look up for that kind of requirements in our system for preventing future errors.</p>
+                
+                <h5>4.2.3 Data Structure</h5>
+                <p>In our system, we will use two types of variables, which are numeric and text types.</p>
+                <p>Numeric types will be used for storing numeric values like ID’s. We will use INT as our numeric type.</p>
+                <p>Text types will be used for storing variables which like name, username etc.</p>
+                
+                <h3>5. User Interface Design and Corresponding SQL Statements</h3>
+                
+                <a href="imgs/ui1.png" data-toggle="lightbox">
+                    <img src="imgs/ui1.png" class="img-fluid">
+                </a>
+                
+                <h4>5.1 Login</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @email, @password
+                </p>
+                <p>
+                    <b>Process:</b>
+                    When user enter the system this page shows up. Here, user can login the system. If user forgot password, he/she can go to change password page. Also user can create account or manager account. Both manager and user can enter system from this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Enter the system:</b><br>
+<pre>
+Select *
+From GeneralUser
+Where username = @username and password = @password
+</pre>
+                </p>
+                <a href="imgs/ui2.png" data-toggle="lightbox">
+                    <img src="imgs/ui2.png" class="img-fluid">
+                </a>
+                
+                <h4>5.2 Newsfeed Page</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @search, @user_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After user login system this page shows up. Newsfeed appears in this page. Newsfeed includes recent check-ins of his/her friends. Also user can reach his friends, messages, profile. Also user can logout from system. In this page user can search location to make check-ins or learn about locations.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Newsfeed:</b><br>
+<pre>
+Select user.username, user.profile_pic, checkin.location_name, checkin.text, checkin.time, checkin.num_of_like
+From user, friends, checkin
+Where @user_id = friends.person1_id and user.id = friends.person2_id and comment.user_id = friends.person2_id
+Order by time desc
+</pre>
+                    <b>Welcome Message:</b><br>
+<pre>
+Select username
+From user
+Where id = @user_id
+</pre>
+                </p>
+                <a href="imgs/ui3.png" data-toggle="lightbox">
+                    <img src="imgs/ui3.png" class="img-fluid">
+                </a>
+                
+                <h4>5.3 Location Search</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @search, @user_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After user search a place, this page shows up. System shows all locations which includes search keyword. User can choose a location and go to that locations page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Search location:</b><br>
+<pre>
+Select *
+From location
+Where name like ‘%@search_name%’
+</pre>
+                </p>
+                <a href="imgs/ui4.png" data-toggle="lightbox">
+                    <img src="imgs/ui4.png" class="img-fluid">
+                </a>
+                
+                <h4>5.4 Location Page</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @loc_id, @time, @text, @selected_checkin, @selected_user
+                </p>
+                <p>
+                    <b>Process:</b>
+                    When user search a location and enters that location this page shows up. In this page user can see information about location also he/she can enters comment and make check-in this location. User will be able to see recent check-ins for this location. Also user can like check-ins in this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Information about location:</b><br>
+<pre>
+Select *
+From location , photo
+Where location.id = @loc_id and photo.loc_id = id
+</pre>
+                    <b>Enter check-in:</b><br>
+<pre>
+Insert into checkin
+values(@loc_id, @text, @rate)
+</pre>
+                    <b>Most liked check-ins:</b><br>
+<pre>
+Select user.username, user.profile_pic, checkin.location_name, checkin.text, time, checkin.num_of_like
+from location, checkin, user
+where location.id = @loc_id and location.id = checkin.loc_id and user.id = checkin.user_id and checkin_likes.checkin_id = checkin.id
+order by num_of_like desc
+</pre>
+                    <b>Like check-ins(if no matches in checkin_likes by this user id to avoid double like):</b><br>
+<pre>
+Insert into checkin_likes
+values(@selected_checkin, @selected_user)
+</pre>
+                    <b>Add location to your favorites:</b><br>
+<pre>
+Insert into favorite_locs
+Values(@user_id, @loc_id)
+</pre>
+                </p>
+                <a href="imgs/ui5.png" data-toggle="lightbox">
+                    <img src="imgs/ui5.png" class="img-fluid">
+                </a>
+                
+                <h4>5.5 Check-in Page</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @checkin_id, @text, @selected_comment_id, @selected_user_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    When user enters someone’s check-in via show comment. He/she can see all comments which sended that check-in. Also he/she can enters new comment. User can both like check-in and comments in this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Check-in:</b><br>
+<pre>
+Select user.username, user.profile_pic, checkin.location_name, checkin.text, checkin.time, checkin.num_of_like
+from checkin, user
+where checkin.id = @checkin_id and checkin.user_id = user.id
+</pre>
+                    <b>Comments of check-ins:</b><br>
+<pre>
+Select user.username, user.profile_pic, checkin.location_name, checkin.text, checkin.time, checkin.num_of_like
+From checkin_comments, comment, user
+Where checkin_comment.checkin_id = @checkin_id and checkin_comment.comment_id = comment.id and comment.user_id = user.id 
+</pre>
+                    <b>Enter comment:</b><br>
+<pre>
+insert into comment
+values(@user_id, @text, @time)
+</pre>
+                    <b>Comment like:</b><br>
+<pre>
+insert into comment_likes
+values(@user_id, @ selected_comment_id)
+</pre>
+                    <b>Report comment:</b><br>
+<pre>
+Insert into comment_report
+values(@selected_comment_id, @selected_user_id)
+</pre>
+                </p>
+                <a href="imgs/ui6.png" data-toggle="lightbox">
+                    <img src="imgs/ui6.png" class="img-fluid">
+                </a>
+                
+                <h4>5.6 Profile Page</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    When user click on myProfile button he/she can see how others see their profiles. Also they can see all check-ins which already posted.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Check-in:</b><br>
+<pre>
+select username, birth_date, bio
+from user
+where user.id = @user_id
+</pre>
+                    <b>All check-ins:</b><br>
+<pre>
+Select user.username, user.profile_pic, checkin.location_name, checkin.text, checkin.time, checkin.num_of_like
+From checkin, user
+Where checkin.user_id = @user_id
+</pre>
+                </p>
+                <a href="imgs/ui7.png" data-toggle="lightbox">
+                    <img src="imgs/ui7.png" class="img-fluid">
+                </a>
+                
+                <h4>5.7 My Friends Page</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @selected_rem_friend, @search_friend
+                </p>
+                <p>
+                    <b>Process:</b>
+                    When user click on friends. He/she can see their friends and message them or remove them. Also they can search for new friends.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Show friends:</b><br>
+<pre>
+Select user.profil_pic, user.username
+from user, friend
+where friends.person1_id= @user_id and friends.person2_id = user.id
+</pre>
+                    <b>Remove friends: </b><br>
+<pre>
+Delete from friends
+Where friends.person2 = @selected_rem_friend or (friends.person1 = @selected_rem_friend and friends.person2 = @user_id)
+</pre>
+                </p>
+                <a href="imgs/ui8.png" data-toggle="lightbox">
+                    <img src="imgs/ui8.png" class="img-fluid">
+                </a>
+                
+                <h4>5.8 User Search</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @search_friend, @user_id, @selected_user_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After user search friend this page show user all user which include the key in their username. Also they can add those users.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Search friend:</b><br>
+<pre>
+Select profil_pic, username, reg_date, location.name
+From user, favorite_loc, location
+Where username like ‘%@search_friend%’ and favorite_loc.user_id = @user_id and favorite_loc.loc_id = location.id
+</pre>
+                    <b>Friend Request:</b><br>
+<pre>
+Insert into friend_req
+Values (@user_id, @selected_user_id,@time)
+</pre>
+                </p>
+                <a href="imgs/ui9.png" data-toggle="lightbox">
+                    <img src="imgs/ui9.png" class="img-fluid">
+                </a>
+                
+                <h4>5.9 Friend Requests</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @selected_id
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After user click on my friend requests, he/she can see requests and accept the request or remove request.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Accept user request:</b><br>
+<pre>
+Insert into friends
+Values(@user_id, @selected_id)
+Insert into friends
+Values(@selected_id, @user_id)
+</pre>
+                    <b>Remove user request:</b><br>
+<pre>
+Remove from friend_reqs
+Where receiver = @user_id and sender = @selected_id
+</pre>
+                    <b>Show Requests:</b><br>
+<pre>
+Select profile_pic, username
+From friend_req, user
+Where friend_req.receiver = @user_id and friend_req.sender = user.sender
+</pre>
+                </p>
+                <a href="imgs/ui10.png" data-toggle="lightbox">
+                    <img src="imgs/ui10.png" class="img-fluid">
+                </a>
+                
+                <h4>5.10 Messages</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @selected_id, @message, @time
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After users click on messages. They can see all of their friends’ pictures. If they click picture of friend, they can see messages with that friend and send them new messages.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Showing all friends:</b><br>
+<pre>
+select profil_pic, username
+from user, friend
+where friends.person1_id= @user_id and friends.person2_id = user.id
+</pre>
+                    <b>Showing messages of selected friend:</b><br>
+<pre>
+Select message, date
+From messages
+Where reviever = @user_id and sender = @selected_id
+</pre>
+                    <b>Sending message:</b><br>
+<pre>
+Insert into messages
+Values (@user_id, @selected_id, @message, @time)
+</pre>
+                </p>
+                <a href="imgs/ui11.png" data-toggle="lightbox">
+                    <img src="imgs/ui11.png" class="img-fluid">
+                </a>
+                
+                <h4>5.11 Change Settings</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @user_id, @profil_pic, @email, @password, @bio
+                </p>
+                <p>
+                    <b>Process:</b>
+                    User can change his profil picture, e-mail, password and bio from this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Updating user settings:</b><br>
+<pre>
+Update user
+Set profil_pic = @profil_pic, email = @email, password = @password, bio = @bio
+</pre>
+                </p>
+                <a href="imgs/ui12.png" data-toggle="lightbox">
+                    <img src="imgs/ui12.png" class="img-fluid">
+                </a>
+                
+                <h4>5.12 Add New Location</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @name, @address, @photo, @info 
+                </p>
+                <p>
+                    <b>Process:</b>
+                    Manager can add new location from this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Creating new location:</b><br>
+<pre>
+Insert into location
+Values(@name, @address, @photo, @info)
+</pre>
+                </p>
+                <a href="imgs/ui13.png" data-toggle="lightbox">
+                    <img src="imgs/ui13.png" class="img-fluid">
+                </a>
+                
+                <h4>5.13 Change Location Settings</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @location_id, @title, @name, @ address, @photo, @info 
+                </p>
+                <p>
+                    <b>Process:</b>
+                    Manager can update new location from this page.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Updating location settings:</b><br>
+<pre>
+Update location
+set name = @name, address= @ address, info = @info
+where location.id = @location_id
+</pre>
+                    <b>Adding new photos:</b><br>
+<pre>
+Insert into photo
+Values (@location_id, @title)
+</pre>
+                </p>
+                <a href="imgs/ui14.png" data-toggle="lightbox">
+                    <img src="imgs/ui14.png" class="img-fluid">
+                </a>
+                
+                <h4>5.14 Sign Up For User</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @email, @password, @username, @birth_date, @answer
+                </p>
+                <p>
+                    <b>Process:</b>
+                    User will sign up in this page
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>New user sign-up:</b><br>
+<pre>
+Insert into user
+values(@email, @password, @username, @birth_date, @answer)
+Where @password = @reppass
+</pre>
+                </p>
+                <a href="imgs/ui15.png" data-toggle="lightbox">
+                    <img src="imgs/ui15.png" class="img-fluid">
+                </a>
+                
+                <h4>5.15 Sign Up For Managers</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @email, @password, @username, @role, @secondary_email, @answer
+                </p>
+                <p>
+                    <b>Process:</b>
+                    Manager will sign up in this page
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>New manager user sign-up:</b><br>
+<pre>
+Insert into LocationAdmin
+Values(@email, @password, @username, @role, @secondary_email, @answer)
+Where @password = @reppass
+</pre>
+                </p>
+                <a href="imgs/ui16.png" data-toggle="lightbox">
+                    <img src="imgs/ui16.png" class="img-fluid">
+                </a>
+                
+                <h4>5.16 Change Password Validation</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @email, @answer
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After click on forgot password button, this page will show up. User should enter mail and secret question answer so that system will validate that user.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Validation of mail and answer:</b><br>
+<pre>
+Select id
+From GeneralUser
+Where email = @email and answer = @answer
+</pre>
+                </p>
+                <a href="imgs/ui17.png" data-toggle="lightbox">
+                    <img src="imgs/ui17.png" class="img-fluid">
+                </a>
+                
+                <h4>5.17 Change Password</h4>
+                
+                <p>
+                    <b>Inputs:</b>
+                    @id, @password, @reppass
+                </p>
+                <p>
+                    <b>Process:</b>
+                    After mail-question validation this page will show up and user decide his/her new password.
+                </p>
+                <p>
+                    <b>SQL Statements:</b><br>
+                    <b>Decide new password:</b><br>
+<pre>
+Update GeneralUser
+Set password = @password
+Where id = @id
+Where password = repassword
+Where @password = @reppass
+</pre>
+                </p>
+                
+                <h3>6. Advanced Database Components</h3>
+                
+                <h4>6.1 View</h4>
+                <p>We will have two different views in the project, one for User and one for Location Manager.</p>
+                
+                <h5>6.1.1 User View</h5>
+                <p>Users will mainly see their personal “News Feed” page when they sign in to the system. News feed will be produced by User’s friends and system will order the check-ins of User’s friends according to time. Check-ins which posted lastly will be seen first and User can see other check-in chronically. So, when User logs in to the system, we will use this view to list the check-ins.</p>
+<pre>
+Create view user_friends as
+Select person2 from user, friends
+Where user.id = friends.person1
+Create view friends_checkins as
+Select * from checkin
+Where checkin.user_id in user_friends
+</pre>
+                <p>Users can also see a location’s page, check-ins made in the location, and the rating. We will use this view to list check-ins.</p>
+<pre>
+Create view checkins_inloc as
+Select * from checkin
+Where loc_id = @loc_id
+Order by time desc
+</pre>
+                <h5>6.1.2 Location Manager View</h5>
+                <p>Location Manager will mainly see his/her location’s page, check-ins made in the place and the rating of the place. Check-ins made in the place will chronically order and Location Manager will see the lastly posted check-in on the top of the page. We will use this view to list the check-ins.</p>
+<pre>
+Create view location_ret as
+Select * from location
+Where admin_id = @admin_id
+</pre>
+                
+                <h4>6.2 Stored Procedures</h4>
+                <p>We planned to use stored procedures when creating a check-in, location, and user. Whenever a check-in created by the user, we need to create a check-in tuple for every check-ins in our system. </p>
+                <p>A procedure that is similar for check-ins will be applied whenever a User, Location Manager or a location created, and we need to create as many tuples as them.</p>
+                <p>We will need to store check-ins for displaying them in User’s and Location Manager’s view, store friends for displaying check-ins in the “News Feed” page for User’s view, and store locations for displaying them in User’s and Location Manager’s View.</p>
+                
+                <h4>6.3 Reports</h4>
+                <p>When a User wants to see how many likes his/her check-ins have, User will see them as a report and can track them according to time and User.</p>
+                
+                <h4>6.4 Triggers</h4>
+                <ul>
+                    <li>When a check-in is deleted from system, all comment which connected to that check-in will also be deleted.</li>
+                    <li>When a comment is liked, like count will be increased.</li>
+                    <li>When location manager is created, location table will be updated.</li>
+                    <li>When a check-in added to system, check-in count will be increased.</li>
+                    <li>When a location deleted, check-ins for that location also will be deleted.</li>
+                    <li>When a check-in deleted, number of check-ins will be decreased.</li>
+                    <li>When a friend deleted, messages with those users also will be deleted.</li>
+                </ul>
+                
+                <h4>6.5 Constraints</h4>
+                <ul>
+                    <li>If someone wants to use this system, he/she should login.</li>
+                    <li>If user wants to see comments of check-in, user should enter the corresponding check-in page.</li>
+                    <li>If someone wants to check-in a location, location should exist in system.</li>
+                    <li>User should search for a person if he/she wants add him/her as a friend.</li>
+                    <li>User should search for a location if he/she wants to check-in.</li>
+                    <li>User cannot see non friends check-ins if the privacy is close.</li>
+                    <li>There cannot be two same username.</li>
+                </ul>
+                
+                <h3>7. Implementation Plan</h3>
+                <p>We are going to use MySQL server in our project as database management system. For web site logic and UI we will code in php, html also js.</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
