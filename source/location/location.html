@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="css/location.css" type="text/css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style> 
+input[type=text] {
+    width: 60%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid red;
+    border-radius: 4px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="topnav">
+  <a href="../main_page/main_page.html">Home</a>
+  <a href="../friends/friends.html">Friends</a>
+  <a href="../messages/messages.html">Messages</a>
+  <a href="../myProfile/myProfile.html">myProfile</a>
+  <a href="../settings/settings.html">Settings</a>
+  <a href="../index.html">Logout</a>
+  <div class="search-container">
+    <form action="../search_location/search_location.html">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+</div>
+
+<div style="padding-left:16px">
+  <h2>Location #399</h2>  <!-- there will be php database content-->
+</div>
+
+
+<div class="rectangle">
+  <div class="column left" style="background-color:#aaa;">
+    <img src="images/first.jpg">
+    <font style="color:red;">Rate:  4.3</font><br>
+    <font style="color:red;">Number of Checkin: 123</font>
+  </div>
+  <div class="column right" style="background-color:#bbb;">
+    <h2>Place 399 Name</h2>
+    <p>Place 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name infoPlace 399 Name info</p>
+  </div>
+  <form>
+    <label style="color:red;" for="fname"><br>&emsp;Enter Comment: </label><br> <br>
+    &emsp;<input type="text" id="fname" name="fname" placeholder="Comment..">
+</form><br>
+  <div class="""slidecontainer">
+
+  <p style="color:red;">&emsp;Rate: <span id="demo" style="color:black;"></span></p>
+  &emsp;<input type="range" min="1" max="5" value="5" class="slider" id="myRange">
+  <form action="location.html" style="padding-left:75%;">
+    <button type="button" style=" background: transparent;">
+      <img src="images/check.png" width="90" height="50" alt="submit" />
+    </button><br>........................
+</form>
+</div>
+
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script>
+</div>
+
+<hr class=style1  width="60%">
+
+<script type="text/javascript">
+  for (i = 0; i < 5; i++) { 
+      document.write("<div class="+'rectangle_1'+">");
+      document.write("<div class="+'column_1 left1'+" style="+'background-color:#aaa;'+">");
+      document.write("<img src="+'images/elon.png'+">");
+      document.write("</div>");
+      document.write("<div class="+'column_1 right1'+" style="+'background-color:#black;'+">");
+      document.write("<a href="+'../check_in_comment/check_in_comment.html'+"><font size="+'5'+">Elon Has checked-in: #loc 399</font></a>");
+      document.write("&emsp;<p>Elon's comment here...</p><br>");
+      document.write("<p>Here is Date.&emsp;&emsp;&emsp;report button&emsp;&emsp;&emsp; number of like: </p>");
+      document.write("</div>");
+      document.write("</div>");
+      document.write("<hr class=style1  width=60%> ");
+  }
+    
+</script>
+
+
+
+</body>
+</html>

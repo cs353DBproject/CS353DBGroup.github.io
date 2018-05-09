@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="css/search_location_admin.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<div class="topnav">
+  <a href="../admin_page/admin_page.html">Home</a>
+  <a href="../add_location/add_location.html">Add Location</a>
+  <a href="../change_loc_settings/change_loc_settings.html">Change Settings</a>
+  <a href="..//myProfile.html">Change Location Specifications</a>
+  <a href="../index.html">Logout</a>
+  <div class="search-container">
+    <form action="../search_location_admin/search_location_admin.html">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+</div>
+
+<div st mhyle="padding-left:16px">
+  <h2>You Searched: Location123123</h2>  <!-- there will be php database content-->
+</div>
+
+<script type="text/javascript">
+	for (i = 0; i < 5; i++) { 
+    	document.write("<div class="+"square"+"><div class="+"image"+"><img src="+"images/local.png"+"></div><a class="+"name"+" href="+"#"+">Location123123</a><a class="+"remove"+" href="+"#"+">remove</a><a class="+"message"+" href="+"#"+">message</a></div><br>");
+	}
+    
+</script>
+
+
+
+</body>
+</html>

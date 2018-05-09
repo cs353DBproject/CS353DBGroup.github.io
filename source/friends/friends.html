@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="css/friends.css" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+
+
+<div class="topnav">
+  <a href="../main_page/main_page.html">Home</a>
+  <a  class="active" href="../friends/friends.html">Friends</a>
+  <a href="../messages/messages.html">Messages</a>
+  <a href="../myProfile/myProfile.html">myProfile</a>
+  <a href="../index.html">Logout</a>
+  <div class="search-container">
+    <form action="../search_location/search_location.html">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+</div>
+
+<div style="padding-left:16px">
+  <h2>Your Friends</h2>
+</div>
+
+<!--<button href="../request/request.html" type="button" class="btn">Request</button>-->
+
+<input type="button" class="btn btn-info" value="Request" onclick=" goto_request()">
+
+<script>
+function goto_request()
+{
+     location.href = "../request/request.html";
+} 
+</script>
+
+<div class="square-container">
+
+  <script type="text/javascript">
+    for (i = 0; i < 5; i++) { 
+      document.write("<div class="+"square"+"><div class="+"image"+"><img src="+"images/elon.png"+"></div><a class="+"name"+" href="+"#"+">Elon Musk</a><a class="+"remove"+" href="+"#"+">remove</a><a class="+"message"+" href="+"#"+">message</a></div>");
+  }
+  
+  </script>
+</div>
+<br>
+<div align="center" class="search-container" >
+    <form action="../search_user/search_user.html">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+  </div>
+<br><br>
+</body>
+</html>
