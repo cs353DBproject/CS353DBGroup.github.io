@@ -1,4 +1,4 @@
-*{color: #5F9EA0;}
+*{color: #360705;}
 .bg{background: DarkSlateBlue  
 	no-repeat; 
 	width: 100%; 
@@ -91,23 +91,39 @@ body {
 }
 
 .feed{
-	    width: 700px;
-	    height: 150px;
-	    background-color: grey;
-
-	    /*position: absolute;
-	    top:0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;*/
-
-	    margin: auto;
+      width: 700px;
+      height: 150px;
+      background-color: grey;
+      margin: auto;
 
 }
-
 .style1{
 
-	 border-top: 5px double black;
-	 color : black;
-	 margin-top:4vh;
+   border-top: 5px double black;
+   color : black;
+   margin-top:4vh;
+}
+.rectangle {
+  content: "";
+  display: table;
+  width: 700px;
+  height: 172px;
+  background: grey;
+  border: 5px solid #ccc; 
+      margin: auto;
+}
+
+.column {
+    float: left;
+    padding: 10px;
+    height: 172px; /* Should be removed. Only for demonstration */
+}
+
+.left {
+  width: 22%;
+  margin: auto;
+}
+
+.right {
+  width: 78%;
 }

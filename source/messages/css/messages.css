@@ -1,4 +1,4 @@
-*{color: #5F9EA0;}
+*{color: #360705;}
 .bg{background: DarkSlateBlue  
 	no-repeat; 
 	width: 100%; 
@@ -90,110 +90,21 @@ body {
   }
 }
 
-.feed{
-	    width: 700px;
-	    height: 150px;
-	    background-color: grey;
-
-	    /*position: absolute;
-	    top:0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;*/
-
-	    margin: auto;
-
-}
-
-.style1{
-
-	 border-top: 5px double black;
-	 color : black;
-	 margin-top:4vh;
-}
-
 .rectangle {
   content: "";
   display: table;
   clear: both;
   width: 700px;
-  height: 250px;
+  height: 70px;
   background: grey;
   border: 5px solid #ccc; 
       margin: auto;
 }
 
-.column {
-    float: left;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
-}
-
-.left {
-  width: 25%;
-}
-
-.right {
-  width: 75%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-
-body {
-  font: 14px/1 'Open Sans', sans-serif;
-  color: #555;
-  
-}
-
-.gallery {
-  width: 570px;
-  margin: 0 auto;
-  padding: 5px;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,.3);
-}
-
-.gallery > div {
-  position: relative;
-  float: left;
-  padding: 5px;
-}
-
-.gallery > div > img {
-  display: block;
-  width: 200px;
-  transition: .1s transform;
-  transform: translateZ(0); /* hack */
-}
-
-.gallery > div:hover {
-  z-index: 1;
-}
-
-.gallery > div:hover > img {
-  transform: scale(1.7,1.7);
-  transition: .3s transform;
-}
-
-.cf:before, .cf:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-
-.cf:after {
-  clear: both;
-}
 
 h1 {
-  margin: 40px 0;
-  font-size: 30px;
+  margin: 10px 0;
+  font-size: 15px;
   font-weight: 300;
   text-align: center;
 }
