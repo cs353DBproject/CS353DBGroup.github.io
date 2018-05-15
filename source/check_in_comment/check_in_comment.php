@@ -73,7 +73,7 @@ input[type=submit]:hover {
 </div>
 
 <?php
-  $sql = "select * from (select * from Checkin where id = ".$check_in_id.") as checkin join (select checkin_id, count(*) as num_of_likes from checkin_likes group by checkin_id) as checkin_likes on checkin.id = checkin_likes.checkin_id";
+  $sql = "select * from (select * from Checkin where id = ".$check_in_id.") as checkin left join (select checkin_id, count(*) as num_of_likes from checkin_likes group by checkin_id) as checkin_likes on checkin.id = checkin_likes.checkin_id";
   $result = $conn->query($sql);
   if($result->num_rows > 0){
     while($row = $result->fetch_assoc() ){
@@ -100,7 +100,7 @@ input[type=submit]:hover {
         echo "<div class="."column right"." style="."background-color:#black;".">";
         echo "<a><font size="."5".">".$checker_name." Has checked-in: ".$checkin_location."</font></a>
         &emsp;<p>".$checker_name."'s comment: ".$row['text']."</p><br>
-        <p>".$row['time'].".&emsp;&emsp;&emsp; Number of like: ".$row['num_of_likes']."</p>";
+        <p>".$row['time'].".&emsp;&emsp;&emsp; Number of like: ".(int)$row['num_of_likes']."</p>";
         echo "</div>";
       echo "</div>";
       echo "<hr class=style1  width=60%> ";
@@ -150,7 +150,7 @@ input[type=submit]:hover {
 				if($rc_result->num_rows < 1) {
 					echo "<a href=\"../report_comment.php?comment_id=".$row1['id']."\">Report</a>&emsp;&emsp;";
 				}
-				echo " Number of like: ".$row1['num_of_likes']."</p>";
+				echo " Number of like: ".(int)$row1['num_of_likes']."</p>";
                 echo "</div>";
               echo "</div>";
               echo "<hr class=style1  width=60%> ";

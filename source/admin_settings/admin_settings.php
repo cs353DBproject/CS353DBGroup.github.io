@@ -2,23 +2,54 @@
 	require '../config.php';
 	require '../utils.php';
 	$conn = acc_header();
+	$acc = get_acc($conn);
 	
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-  $answer = $_POST['answer'];
-  $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
-  $var = $_GET['var'];
-  $secondary_email = $_POST['secondary_email'];
-  $role = $_POST['role'];
-  $admin_id = $_SESSION['id'];
   if (isset($_POST['change_button'])){
-    $sql = " update GeneralUser set email = '".$email."', password = '".$password."', answer = '".$answer."' where id = '".$admin_id."';";
+	$email = $_POST['email'];
+	$password = $_POST['password'];
+	$answer = $_POST['answer'];
+	$birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
+	$secondary_email = $_POST['secondary_email'];
+	$role = $_POST['role'];
+  
+    $sql = " update GeneralUser set email = '".$email."', password = '".$password."', answer = '".$answer."' where id = '".$acc['id']."';";
   	$result = $conn->query($sql);
+	if(!$result) {
+		if(CFG_DEBUG)
+			die('An error occurred while trying to update GeneralUser: ' . mysqli_error($conn));
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
   	
-  	$sql = " update LocationAdmin set role = '".$role."' , secondary_email = '".$secondary_email."' where user_id = '".$admin_id."' ;";
+  	$sql = " update LocationAdmin set role = '".$role."' , secondary_email = '".$secondary_email."' where user_id = '".$acc['id']."' ;";
   	$result = $conn->query($sql);
-    $id = $_SESSION['id'];
-	$_SESSION['id'] = $id;
+	if(!$result) {
+		if(CFG_DEBUG)
+			die('An error occurred while trying to update LocationAdmin : ' . mysqli_error($conn));
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
+	
+	if(isset($_FILES['fileToUpload'])) {
+		$file_name = $_FILES['fileToUpload']['name'];
+		$file_size = $_FILES['fileToUpload']['size'];
+		$file_tmp = $_FILES['fileToUpload']['tmp_name'];
+		$file_type = $_FILES['fileToUpload']['type'];
+		$file_ext = @strtolower(end(explode('.',$_FILES['fileToUpload']['name'])));
+		
+		$expensions= array("jpeg","jpg","png");
+		
+		if(in_array($file_ext,$expensions)=== false) {
+			echo "<script> alert('Only JPEG and PNG files are allowed!');</script>";
+		}
+		else {
+			$file_name = "profile".$acc['id'].".png";
+	
+			if (file_exists("../images/".$file_name))
+				unlink("../images/".$file_name);
+			move_uploaded_file($file_tmp,"../images/".$file_name);
+		}
+	}
   }
 
  ?>
@@ -40,7 +71,7 @@
 		  <a href="../add_location/add_location.php">Add Location</a>
 		  <a class="active" href="../admin_settings/admin_settings.php">Change Settings</a>
 		  <a href="../change_loc_settings/change_loc_settings.php">Change Location Specifications</a>
-		  <a href="../index.php">Logout</a>
+		  <a href="../logout.php">Logout</a>
 		  <div class="search-container">
 		    <form action="../search_location_admin/search_location_admin.php">
 		      <input type="text" placeholder="Search.." name="search">
@@ -54,7 +85,7 @@
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
 			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+			<form class= "form-container" role = "form" method = "post" enctype="multipart/form-data">
 			<h1 align="center"> Change Account Settings</h1>
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>
@@ -63,10 +94,6 @@
 			  <div class="form-group">
 				<label for="exampleInputPassword1">Password</label>
 				<input type="password" name= "password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-			  </div>
-			  <div class="form-group">
-				<label for="exampleInputPassword1">Repeat Password</label>
-				<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
 			  </div>
 			  <div class="form-group">
 				<label for="exampleInputPassword1">Secret Question Answer</label>
@@ -83,8 +110,11 @@
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Role</label>
 				<input type="text" name= "role" class="form-control" id="exampleInputEmail1" placeholder="Role">
-			  </div>	  <br>
-			  <a href="../settings/settings.html" type="submit" class="btn btn-success btn-block">Change Profile Picture</a> <br>
+			  </div>
+				<div class="form-group">
+				  <label for="exampleFormControlTextarea1">Picture</label>
+				  <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+				</div>
 			  <button class="btn btn-success btn-block" type = "submit" name = "change_button">Change Settings</button>
 			</form>
 			

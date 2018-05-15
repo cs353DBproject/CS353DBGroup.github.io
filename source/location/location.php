@@ -50,11 +50,27 @@ input[type=text] {
   $search = mysqli_real_escape_string($conn, $_GET["search"]);
   $sql = "SELECT * FROM (SELECT * FROM location WHERE name = '$search') AS location LEFT JOIN (select loc_id, AVG(rate) AS avg_rate, COUNT(*) AS num_of_checkin FROM checkin GROUP BY loc_id) AS avg_rates ON location.id = avg_rates.loc_id";
   $loc;
+  $photo_name = "";
   $result = $conn->query($sql);
   if($result->num_rows > 0){
     while($row = $result->fetch_assoc() ){
       $loc_id = $row['id'];
 	  $loc = $row;
+	  
+		$sql = "SELECT * FROM Photo WHERE loc_id = ".$loc_id." ORDER BY id LIMIT 1";
+		$result = $conn->query($sql);
+		if(!$result) {
+			if(CFG_DEBUG)
+				die('An error occurred while trying to get location photo : ' . mysqli_error($conn));
+			else
+				die('An error occurred. We will look at it as soon as possible!');
+		}
+		
+		while($row = $result->fetch_assoc() ){
+			$photo_name = "locImage".$loc_id."-".$row['id'].".png";
+			break;
+		}
+		break;
     }
   }
   else {
@@ -103,7 +119,16 @@ input[type=text] {
 
 <div class="rectangle">
   <div class="column left" style="background-color:#aaa;">
+<?php
+	if($photo_name != "") {
+		echo "<img src=\"../images/$photo_name\" width=\"300\">";
+	}
+	else {
+?>
     <img src="images/first.jpg">
+<?php
+	}
+?>
     <font style="color:red;">Rate:  <?php echo $loc['avg_rate']; ?></font><br>
     <font style="color:red;">Number of Checkins: <?php echo $loc['num_of_checkin']; ?></font>
   </div>
@@ -157,12 +182,17 @@ slider.oninput = function() {
 
       echo "<div class= "."rectangle_1"." >";
         echo "<div class= "."column_1 left1"." style= "."background-color:#aaa;".">";
-        echo "<img src="."images/elon.png".">";
+		if (file_exists("../images/profile".$row['user_id'].".png")) {
+			echo "<img src=\"../images/profile".$row['user_id'].".png\" width=\"200\">";
+		}
+		else {
+			echo "<img src=\"../images/elon.png\">";
+		}
         echo "</div>";
         echo "<div class="."column_1 right1"." style="."background-color:#black;".">";
         echo "<a href="."../check_in_comment/check_in_comment.php?var=".$row['id']."&var2=".$row['user_id'].""."><font size="."5".">".$checker_name." Has checked-in: ".$search."</font></a>
         &emsp;<p>".$checker_name."'s comment: ".$row['text']."</p><br>
-        <p>".$row['time'].".&emsp;&emsp;&emsp;Number of Likes: ".$row['num_of_likes']."</p>";
+        <p>".$row['time'].".&emsp;&emsp;&emsp;Number of Likes: ".(int)$row['num_of_likes']."</p>";
         echo "</div>";
       echo "</div>";
       echo "<hr class=style1  width=60%> ";

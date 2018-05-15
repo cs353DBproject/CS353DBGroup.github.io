@@ -2,26 +2,46 @@
 	require '../config.php';
 	require '../utils.php';
 	$conn = acc_header();
-	
-  $admin_id = $_SESSION['id'];
-  $name = $_POST['name'];
-  $address = $_POST['address'];
-  $info = $_POST['info'];
-  $var = $_GET['var'];
+	$acc = get_acc($conn);
 
-  $sql = "select id from Location where admin_id = '".$admin_id."';";
-  $result = $conn->query($sql);
-  if($result->num_rows > 0){
-    while($row = $result->fetch_assoc() ){
-      $location_id = $row['id'];
-    }
-  }
-  if (isset($_POST['change_button'])){
-    $sql = " update Location set name = '".$name."', address = '".$address."', info = '".$info."' where id = '".$location_id."';";
+  $sql = "select * from Location where admin_id = ".$acc['id']."";
+  $locs = $conn->query($sql);
+  if (isset($_POST['change_button']) && isset($_GET['loc_id'])){
+	$name = $_POST['name'];
+	$address = $_POST['address'];
+	$info = $_POST['info'];
+	$loc_id = mysqli_real_escape_string($conn, $_GET['loc_id']);
+    $sql = " update Location set name = '".$name."', address = '".$address."', info = '".$info."' where id = ".$loc_id;
   	$result = $conn->query($sql);
-  	
-    $id = $_SESSION['id'];
-	$_SESSION['id'] = $id;
+	
+	if(isset($_FILES['fileToUpload'])) {
+		$file_name = $_FILES['fileToUpload']['name'];
+		$file_size = $_FILES['fileToUpload']['size'];
+		$file_tmp = $_FILES['fileToUpload']['tmp_name'];
+		$file_type = $_FILES['fileToUpload']['type'];
+		$file_ext = @strtolower(end(explode('.',$_FILES['fileToUpload']['name'])));
+		
+		$expensions= array("jpeg","jpg","png");
+		
+		if(in_array($file_ext,$expensions)=== false) {
+			echo "<script> alert('Only JPEG and PNG files are allowed!');</script>";
+		}
+		else {
+			$sql = "INSERT INTO Photo (loc_id, title) values (".$loc_id.",'".$name."')";
+			$result = $conn->query($sql);
+			if(!$result) {
+				if(CFG_DEBUG)
+					die('An error occurred while trying to add photo : ' . mysqli_error($conn));
+				else
+					die('An error occurred. We will look at it as soon as possible!');
+			}
+			$photo_id = mysqli_insert_id($conn);
+			$file_name = "locImage".$loc_id."-".$photo_id.".png";
+			move_uploaded_file($file_tmp,"../images/".$file_name);
+			header("Location: ../location/location.php?search=".$_POST['name']);
+			exit();
+		}
+	}
   }
 
  ?>
@@ -43,7 +63,7 @@
 		  <a href="../add_location/add_location.php">Add Location</a>
 		  <a href="../admin_settings/admin_settings.php">Change Settings</a>
 		  <a class="active" href="../change_loc_settings/change_loc_settings.php">Change Location Specifications</a>
-		  <a href="../index.php">Logout</a>
+		  <a href="../logout.php">Logout</a>
 		  <div class="search-container">
 		    <form action="../search_location_admin/search_location_admin.php">
 		      <input type="text" placeholder="Search.." name="search">
@@ -51,13 +71,14 @@
 		    </form>
 		  </div>
 		</div>
-
 	<div class ="container-fluid bg">
 		<div class ="row">
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
-			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+<?php
+	if(isset($_GET['loc_id'])) {
+?>
+			<form class= "form-container" role = "form" method = "post" enctype="multipart/form-data">
 			<h1 align="center"> Change Loc. Settings</h1>
 			  <div class="form-group">
 				<label for="Location Name">Location Name</label>
@@ -71,15 +92,30 @@
 				<label for="Info">Info</label>
 				<input type="Info" name= "info" class="form-control" id="Info" placeholder="Info">
 			  </div> <br>
-			  <a href="../change_loc_settings/change_loc_settings.html" type="submit" class="btn btn-success btn-block">Change&Add Picture</a> <br>
+				<div class="form-group">
+				  <label for="exampleFormControlTextarea1">Add Picture</label>
+				  <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+				</div>
 			  <button class="btn btn-success btn-block" type = "submit" name = "change_button">Change Settings</button>
 			</form>
-			
+<?php
+	} else {
+?>
+			<h1 align="center"> Please choose a location</h1>
+			<ul>
+<?php
+	while($row = $locs->fetch_assoc() ){
+		echo "<li><a href=\"change_loc_settings.php?loc_id=".$row['id']."\">".$row['name']."</a></li>";
+	}
+?>
+			</ul>
+<?php
+	}
+?>
 			</div>
 			
 			<div class = "col-md-4 col-sm-4 col-xs-12"></div>	
 		</div>
-		
 	</div>
 	
     </body>

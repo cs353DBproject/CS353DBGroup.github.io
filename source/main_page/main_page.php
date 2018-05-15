@@ -44,14 +44,23 @@
 ?>
 <div class="rectangle">
 	<div class="column" left="" style="background-color:#aaa;">
-		<img src="images/elon.png">
+<?php
+	if (file_exists("../images/profile".$row['id'].".png")) {
+		echo "<img src=\"../images/profile".$row['id'].".png\" width=\"200\">";
+	}
+	else {
+?>
+    <img src="images/elon.png">
+<?php
+	}
+?>
 	</div>
 	<div class="column" right="" style="background-color:#black;">
 		<a href="../check_in_comment/check_in_comment.php?var=<?php echo $row['checkin_id']; ?>&var2=<?php echo $row['user_id']; ?>">
-			<font size="5"><?php echo $row['id']; ?> Has checked-in: <?php echo $row['name']; ?></font>
+			<font size="5"><?php echo $row['username']; ?> Has checked-in: <?php echo $row['name']; ?></font>
 		</a>
 		<p><?php echo $row['text']; ?></p><br>
-		<p><?php echo $row['time']; ?>.   Number of likes: <?php echo $row['like_count']; ?></p>
+		<p><?php echo $row['time']; ?>.   Number of likes: <?php echo (int)$row['like_count']; ?></p>
 	</div>
 </div>
 <hr class=style1  width=60%>
