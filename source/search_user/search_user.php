@@ -4,12 +4,18 @@
 	$conn = acc_header();
 	$acc = get_acc($conn);
 	
-	$query = "CALL friend_checkins(".$acc['id'].")";
+	if(!isset($_GET["search"])) {
+		header("Location: index.php");
+		exit();
+	}
+	
+	$search = mysqli_real_escape_string($conn, $_GET["search"]);
+	$query = "SELECT * FROM (SELECT * FROM generaluser WHERE LOWER(username) LIKE LOWER('%$search%')) AS generaluser JOIN (SELECT * FROM user WHERE privacy = 0) AS user ON generaluser.id = user.user_id";
 	$result = $conn->query($query);
 	
 	if(!$result) {
 		if(CFG_DEBUG)
-			die('An error occurred while trying to fetch checkin information : ' . mysqli_error($conn));
+			die('An error occurred while getting search results : ' . mysqli_error($conn));
 		else
 			die('An error occurred. We will look at it as soon as possible!');
 	}
@@ -19,12 +25,12 @@
 <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="css/main_page.css" type="text/css" rel="stylesheet">
+<link href="css/search_user.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 
 <div class="topnav">
-  <a class="active" href="../main_page/main_page.php">Home</a>
+  <a href="../main_page/main_page.php">Home</a>
   <a href="../friends/friends.php">Friends</a>
   <a href="../messages/messages.php">Messages</a>
   <a href="../myProfile/myProfile.php">myProfile</a>
@@ -36,15 +42,14 @@
     </form>
   </div>
 </div>
-
-<div style="padding-left:16px">
-  <h2>&emsp;&emsp;&emsp;&emsp;Welcome <?php echo $acc['username']; ?></h2>  
+<div st mhyle="padding-left:16px">
+  <h2>&emsp;&emsp;You Searched: <?php echo htmlspecialchars($_GET['search']); ?></h2>
 </div>
 <?php
 	while($row = $result->fetch_assoc()) {
 ?>
 <div class="rectangle">
-	<div class="column" left="" style="background-color:#aaa;">
+    <div class="column left" style="background-color:#aaa;">
 <?php
 	if (file_exists("../images/profile".$row['id'].".png")) {
 		echo "<img class=\"img-thumbnail\" src=\"../images/profile".$row['id'].".png\" width=\"200\">";
@@ -55,19 +60,17 @@
 <?php
 	}
 ?>
-	</div>
-	<div class="column" right="" style="background-color:#black;">
-		<a href="../check_in_comment/check_in_comment.php?var=<?php echo $row['checkin_id']; ?>&var2=<?php echo $row['user_id']; ?>">
-			<font size="5"><?php echo $row['username']; ?> Has checked-in: <?php echo $row['name']; ?></font>
-		</a>
-		<p><?php echo $row['text']; ?></p><br>
-		<p><?php echo $row['time']; ?>.   Number of likes: <?php echo (int)$row['like_count']; ?></p>
+    </div>
+    <div class="column right" style="background-color:#black;">
+		<a href="../profile/profile.php?var=<?php echo $row['id']; ?>"><font size="5"><?php echo $row['username']; ?></font></a>
 	</div>
 </div>
-<hr class="style1"  width="60%">
+<hr class="style1"  width=60%>
 <?php
-    }
+	}
 ?>
+
+
 
 </body>
 </html>

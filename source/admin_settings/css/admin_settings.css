@@ -23,7 +23,7 @@
 }
 
 .login-image {
-   content:url('../images/bg.jpg');
+   content:url('../../images/bg.jpg');
    height: 200px;
     width: 500px;
 	position: relative;

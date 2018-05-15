@@ -1,24 +1,41 @@
 <?php
 	require '../config.php';
-	require '../utils.php';
-	$conn = acc_header();
+	session_start();
 	
-  $email = $_POST['email'];
-  $answer = $_POST['answer'];
-  $control = 555999555;
+	// Create connection
+	$conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD);
+
+	// Check connection
+	if ($conn->connect_error) {
+		if(CFG_DEBUG)
+			die('An error occurred while connection database : ' . $conn->connect_error);
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
+	
+	mysqli_select_db($conn, DB_DATABASE);
 
   if (isset($_POST['check_button'])){
-    $sql = " select id from GeneralUser where email = '".$email."' AND answer = '".$answer."';";
+	$email = $_POST['email'];
+	$answer = $_POST['answer'];
+    $sql = " select * from GeneralUser where email = '".$email."' AND answer = '".$answer."';";
   	$result = $conn->query($sql);
   	if($result->num_rows > 0){
 		while($row = $result->fetch_assoc() ){
-			$control = $row['id'];
+			$_SESSION['id'] = $row['username'];
 		}
-	}
-    if($control != 555999555){
-    	header("Location:/~serdar.erkal/forgot_2/forgot_2.php?var=".$control);
+		
+		$sql = "SELECT * FROM User WHERE user_id = ".$row['id'];
+		$result = $conn->query($sql);
+		if($result->num_rows > 0)
+			header("Location:../settings/settings.php");
+		else
+			header("Location:../admin_settings/admin_settings.php");
         exit;
-    }
+	}
+	else {
+		echo "<script> alert('Email or the answer is wrong!');</script>";
+	}
   }
 ?>
 <!DOCTYPE html>
@@ -29,7 +46,7 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-		<link href="css/forgot_1.css" type="text/css" rel="stylesheet">
+		<link href="css/forgot.css" type="text/css" rel="stylesheet">
     </head>
 
     <body>
@@ -38,7 +55,7 @@
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
 			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+			<form class= "form-container" role = "form" method = "post">
 			<h1 align="center"> Forgot Password</h1>
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>

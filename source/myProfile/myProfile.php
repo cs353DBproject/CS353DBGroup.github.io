@@ -10,6 +10,7 @@ $_SESSION['id'] = $id;
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/myProfile.css" type="text/css" rel="stylesheet">
 
@@ -17,10 +18,10 @@ $_SESSION['id'] = $id;
 <body>
 
 <div class="topnav">
-  <a  href="../main_page/main_page.php?var=<?php echo $id ?>">Home</a>
-  <a href="../friends/friends.php?var=<?php echo $id ?>">Friends</a>
-  <a class="active" href="../myProfile/myProfile.php?var=<?php echo $id ?>">myProfile</a>
-  <a href="../settings/settings.php?var=<?php echo $id ?>">Settings</a>
+  <a  href="../main_page/main_page.php">Home</a>
+  <a href="../friends/friends.php">Friends</a>
+  <a class="active" href="../myProfile/myProfile.php">myProfile</a>
+  <a href="../settings/settings.php">Settings</a>
   <a href="../logout.php">Logout</a>
   <div class="search-container">
     <form action="../search_location/search_location.php">
@@ -74,11 +75,11 @@ $_SESSION['id'] = $id;
   <div class="column left" style="background-color:#aaa;">
 <?php
 	if (file_exists("../images/profile".$user_id.".png")) {
-		echo "<img src=\"../images/profile".$user_id.".png\" width=\"200\">";
+		echo "<img class=\"img-thumbnail\" src=\"../images/profile".$user_id.".png\" width=\"200\">";
 	}
 	else {
 ?>
-    <img src="images/elon.png">
+    <img class="img-thumbnail" src="images/elon.png">
 <?php
 	}
 ?>
@@ -89,14 +90,14 @@ $_SESSION['id'] = $id;
 	if($is_user) {
 ?>
     <p>Birth date: <?php echo $birth_date; ?></p>
-    <p>number of checkins: <?php echo $num_of_checkins; ?></p>
+    <p>number of checkins: <?php echo (int)$num_of_checkins; ?></p>
 <?php
 	}
 ?>
   </div>
 </div>
 
-<hr class=style1  width="60%">
+<hr class="style1"  width="60%">
 
 <?php
   //$sql = "select * from Checkin where user_id = '".$user_id."' order by time asc;";
@@ -112,17 +113,17 @@ $_SESSION['id'] = $id;
         }
       }
 
-      echo "<div class= "."rectangle"." >";
-        echo "<div class= "."column left"." style= "."background-color:#aaa;".">";
+      echo "<div class= \"rectangle\" >";
+        echo "<div class= \"column left\" style= \"background-color:#aaa;\">";
 		if (file_exists("../images/profile".$user_id.".png")) {
-			echo "<img src=\"../images/profile".$user_id.".png\" width=\"200\">";
+			echo "<img class=\"img-thumbnail\" src=\"../images/profile".$user_id.".png\" width=\"200\">";
 		}
 		else {
-			echo "<img src="."images/elon.png".">";
+			echo "<img class=\"img-thumbnail\" src=\"../images/elon.png\">";
 		}
         echo "</div>";
-        echo "<div class="."column right"." style="."background-color:#black;".">";
-        echo "<a href="."../check_in_comment/check_in_comment.php?var=".$row['id']."&var2=".$row['user_id'].""."><font size="."5".">".$id." Has checked-in: ".$location_name."</font></a>
+        echo "<div class=\"column right\" style=\"background-color:#black;\">";
+        echo "<a href=\"../check_in_comment/check_in_comment.php?var=".$row['id']."&var2=".$row['user_id']."\"><font size=\"5\">".$id." Has checked-in: ".$location_name."</font></a>
         &emsp;<p>".$id."'s comment: ".$row['text']."</p><br>
         <p>".$row['time'].".&emsp;&emsp;&emsp;Number of likes: ".(int)$row['num_of_likes']."</p>";
         echo "</div>";

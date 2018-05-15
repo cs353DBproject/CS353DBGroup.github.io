@@ -2,30 +2,42 @@
 	require '../config.php';
 	require '../utils.php';
 	$conn = acc_header();
-	
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-  $answer = $_POST['answer'];
-  $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
-  $var = $_GET['var'];
-  
-  $sql = " select id from GeneralUser where username = '".$var."' ";
-  	$result = $conn->query($sql);
-  	if($result->num_rows > 0){
-					while($row = $result->fetch_assoc() ){
-						$new_id = $row['id'];
-					}
-				}
+	$acc = get_acc($conn);
 
   if (isset($_POST['change_button'])){
-    $sql = " update GeneralUser set email = '".$email."', password = '".$password."', answer = '".$answer."' where id = '".$new_id."';";
+	$email = $_POST['email'];
+	$password = $_POST['password'];
+	$answer = $_POST['answer'];
+	$birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
+	
+    $sql = " update GeneralUser set email = '".$email."', password = '".$password."', answer = '".$answer."' where id = '".$acc['id']."';";
   	$result = $conn->query($sql);
 
-  	$sql = " update User set birth_date = '".$birth_date."' where id = '".$new_id."';";
+  	$sql = " update User set birth_date = '".$birth_date."' where id = '".$acc['id']."';";
   	$result = $conn->query($sql);
-    
-    $id = $_SESSION['id'];
-	$_SESSION['id'] = $id;
+	
+	if(isset($_FILES['fileToUpload'])) {
+		$file_name = $_FILES['fileToUpload']['name'];
+		$file_size = $_FILES['fileToUpload']['size'];
+		$file_tmp = $_FILES['fileToUpload']['tmp_name'];
+		$file_type = $_FILES['fileToUpload']['type'];
+		
+		$file_ext = explode('.', $file_name);
+		$file_ext = strtolower(end($file_ext));
+		
+		$expensions = array("jpeg","jpg","png");
+		
+		if(in_array($file_ext, $expensions) === false) {
+			echo "<script> alert('Only JPEG and PNG files are allowed!');</script>";
+		}
+		else {
+			$file_name = "profile".$acc['id'].".png";
+	
+			if (file_exists("../images/".$file_name))
+				unlink("../images/".$file_name);
+			move_uploaded_file($file_tmp,"../images/".$file_name);
+		}
+	}
   }
 ?>
 <!DOCTYPE html>
@@ -41,11 +53,11 @@
 
     <body>
     	<div class="topnav">
-		  <a  href="../main_page/main_page.php?var=<?php echo $id ?>">Home</a>
-		  <a href="../friends/friends.php?var=<?php echo $id ?>">Friends</a>
-		  <a href="../myProfile/myProfile.php?var=<?php echo $id ?>">myProfile</a>
-		  <a class="active" href="../settings/settings.php?var=<?php echo $id ?>">Settings</a>
-		  <a href="../index.php">Logout</a>
+		  <a  href="../main_page/main_page.php">Home</a>
+		  <a href="../friends/friends.php">Friends</a>
+		  <a href="../myProfile/myProfile.php">myProfile</a>
+		  <a class="active" href="../settings/settings.php">Settings</a>
+		  <a href="../logout.php">Logout</a>
 		  <div class="search-container">
 		    <form action="../search_location/search_location.php">
 		      <input type="text" placeholder="Search.." name="search">
@@ -59,7 +71,7 @@
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
 			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+			<form class= "form-container" role = "form" method = "post" enctype="multipart/form-data">
 			<h1 align="center"> Change Account Settings</h1>
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>
@@ -81,10 +93,10 @@
 				<label for="exampleInputPassword1">Birth Date</label>
 				<input type="Date" name = "birth_date" class="form-control" id="Date" placeholder="Date">
 			  </div>
-			  <form method="POST" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" enctype="multipart/form-data">
-				 <input type="file" name="myimage">
-				 <input type="submit" name="submit_image" value="Upload">
-				</form>
+				<div class="form-group">
+				  <label for="exampleFormControlTextarea1">Picture</label>
+				  <input type="file" name="fileToUpload" id="fileToUpload" class="form-control">
+				</div>
 			  <button class="btn btn-success btn-block" type = "submit" name = "change_button">Change Settings</button>
 			</form>
 			

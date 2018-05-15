@@ -22,6 +22,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/check_in_comment.css" type="text/css" rel="stylesheet">
 
@@ -56,10 +57,10 @@ input[type=submit]:hover {
 <body>
 
 <div class="topnav">
-  <a class="active" href="../main_page/main_page.php?var=<?php echo $id ?>">Home</a>
-  <a href="../friends/friends.php?var=<?php echo $id ?>">Friends</a>
-  <a href="../myProfile/myProfile.php?var=<?php echo $id ?>">myProfile</a>
-  <a href="../index.php">Logout</a>
+  <a class="active" href="../main_page/main_page.php">Home</a>
+  <a href="../friends/friends.php">Friends</a>
+  <a href="../myProfile/myProfile.php">myProfile</a>
+  <a href="../logout.php">Logout</a>
   <div class="search-container">
     <form action="../search_location/search_location.php">
       <input type="text" placeholder="Search.." name="search">
@@ -95,7 +96,12 @@ input[type=submit]:hover {
       }
       echo "<div class= "."rectangle"." >";
         echo "<div class= "."column left"." style= "."background-color:#aaa;".">";
-        echo "<img src="."images/elon.png".">";
+		if (file_exists("../images/profile".$checker_id.".png")) {
+			echo "<img class=\"img-thumbnail\" src=\"../images/profile".$checker_id.".png\" width=\"200\">";
+		}
+		else {
+			echo "<img class=\"img-thumbnail\" src=\"../images/elon.png\">";
+		}
         echo "</div>";
         echo "<div class="."column right"." style="."background-color:#black;".">";
         echo "<a><font size="."5".">".$checker_name." Has checked-in: ".$checkin_location."</font></a>
@@ -129,7 +135,12 @@ input[type=submit]:hover {
 
               echo "<div class= "."rectangle"." >";
                 echo "<div class= "."column left"." style= "."background-color:#aaa;".">";
-                echo "<img src="."images/elon.png".">";
+				if (file_exists("../images/profile".$user_id.".png")) {
+					echo "<img class=\"img-thumbnail\" src=\"../images/profile".$row1['user_id'].".png\" width=\"200\">";
+				}
+				else {
+					echo "<img class=\"img-thumbnail\" src=\"../images/elon.png\">";
+				}
                 echo "</div>";
                 echo "<div class="."column right"." style="."background-color:#black;".">";
                 echo "<a><font size="."5".">".$commenter_name." Has Commented: </font></a>

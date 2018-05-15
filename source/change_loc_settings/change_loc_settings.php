@@ -19,7 +19,9 @@
 		$file_size = $_FILES['fileToUpload']['size'];
 		$file_tmp = $_FILES['fileToUpload']['tmp_name'];
 		$file_type = $_FILES['fileToUpload']['type'];
-		$file_ext = @strtolower(end(explode('.',$_FILES['fileToUpload']['name'])));
+		
+		$file_ext = explode('.', $file_name);
+		$file_ext = strtolower(end($file_ext));
 		
 		$expensions= array("jpeg","jpg","png");
 		
@@ -65,7 +67,7 @@
 		  <a class="active" href="../change_loc_settings/change_loc_settings.php">Change Location Specifications</a>
 		  <a href="../logout.php">Logout</a>
 		  <div class="search-container">
-		    <form action="../search_location_admin/search_location_admin.php">
+		    <form action="../search_location/search_location.php">
 		      <input type="text" placeholder="Search.." name="search">
 		      <button type="submit"><i class="fa fa-search"></i></button>
 		    </form>

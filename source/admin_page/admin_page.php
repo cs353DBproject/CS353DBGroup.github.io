@@ -30,6 +30,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/admin_page.css" type="text/css" rel="stylesheet">
 
@@ -78,10 +79,10 @@
 			  echo "<div class= "."rectangle"." >";
 				echo "<div class= "."column left"." style= "."background-color:#aaa;".">";
 				if (file_exists("../images/profile".$row['user_id'].".png")) {
-					echo "<img src=\"../images/profile".$row['user_id'].".png\" width=\"200\">";
+					echo "<img class=\"img-thumbnail\" src=\"../images/profile".$row['user_id'].".png\" width=\"200\">";
 				}
 				else {
-					echo "<img src="."images/elon.png".">";
+					echo "<img class=\"img-thumbnail\" src=\"../images/elon.png\">";
 				}
 				echo "</div>";
 				echo "<div class="."column right"." style="."background-color:#black;".">";

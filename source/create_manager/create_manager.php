@@ -54,7 +54,7 @@
 	}
 	
 	$_SESSION["id"] = $username;
-	header("Location: ../main_page/main_page.php");
+	header("Location: ../admin_page/admin_page.php");
 	exit();
   }
 ?>

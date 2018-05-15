@@ -67,7 +67,7 @@
   <a href="../change_loc_settings/change_loc_settings.php">Change Location Specifications</a>
   <a href="../logout.php">Logout</a>
   <div class="search-container">
-    <form action="../search_location_admin/search_location_admin.php">
+    <form action="../search_location/search_location.php">
       <input type="text" placeholder="Search.." name="search">
       <button type="submit"><i class="fa fa-search"></i></button>
     </form>

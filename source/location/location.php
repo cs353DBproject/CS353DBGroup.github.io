@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/location.css" type="text/css" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -28,11 +29,11 @@ input[type=text] {
 <body>
 
 <div class="topnav">
-  <a href="../main_page/main_page.php?var=<?php echo $id ?>">Home</a>
-  <a href="../friends/friends.php?var=<?php echo $id ?>">Friends</a>
-  <a href="../messages/messages.php?var=<?php echo $id ?>">Messages</a>
-  <a href="../myProfile/myProfile.php?var=<?php echo $id ?>">myProfile</a>
-  <a href="../index.php">Logout</a>
+  <a href="../main_page/main_page.php">Home</a>
+  <a href="../friends/friends.php">Friends</a>
+  <a href="../messages/messages.php">Messages</a>
+  <a href="../myProfile/myProfile.php">myProfile</a>
+  <a href="../logout.php">Logout</a>
   <div class="search-container">
     <form action="../search_location/search_location.php">
       <input type="text" placeholder="Search.." name="search">
@@ -121,16 +122,16 @@ input[type=text] {
   <div class="column left" style="background-color:#aaa;">
 <?php
 	if($photo_name != "") {
-		echo "<img src=\"../images/$photo_name\" width=\"300\">";
+		echo "<img class=\"img-thumbnail\" src=\"../images/$photo_name\">";
 	}
 	else {
 ?>
-    <img src="images/first.jpg">
+    <img class="img-thumbnail" src="../images/first.jpg">
 <?php
 	}
 ?>
-    <font style="color:red;">Rate:  <?php echo $loc['avg_rate']; ?></font><br>
-    <font style="color:red;">Number of Checkins: <?php echo $loc['num_of_checkin']; ?></font>
+    <font style="color:red;">Rate:  <?php echo (float)$loc['avg_rate']; ?></font><br>
+    <font style="color:red;">Number of Checkins: <?php echo (int)$loc['num_of_checkin']; ?></font>
   </div>
   <div class="column right" style="background-color:#bbb;">
     <h2><?php echo $search; ?></h2>
@@ -183,10 +184,10 @@ slider.oninput = function() {
       echo "<div class= "."rectangle_1"." >";
         echo "<div class= "."column_1 left1"." style= "."background-color:#aaa;".">";
 		if (file_exists("../images/profile".$row['user_id'].".png")) {
-			echo "<img src=\"../images/profile".$row['user_id'].".png\" width=\"200\">";
+			echo "<img class=\"img-thumbnail\" src=\"../images/profile".$row['user_id'].".png\" width=\"200\">";
 		}
 		else {
-			echo "<img src=\"../images/elon.png\">";
+			echo "<img class=\"img-thumbnail\" src=\"../images/elon.png\">";
 		}
         echo "</div>";
         echo "<div class="."column_1 right1"." style="."background-color:#black;".">";

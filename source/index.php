@@ -102,7 +102,7 @@
 			  		  <!--- href="./main_page/main_page.html"-->
 			  <button class = "btn btn-success btn-block" type = "submit" name = "login">Login</button>
 			  <button class = "btn btn-success btn-block" type = "submit" name = "login_admin">Login as Admin</button>
-			  <a href="forgot_1/forgot_1.php" type="submit" class="btn .button1 btn-block">Forgot Password</a>
+			  <a href="forgot/forgot.php" type="submit" class="btn .button1 btn-block">Forgot Password</a>
 			  <a href="create_account/create_account.php" type="submit" class="btn .button2 btn-block">Create Account</a>
 			  <a href="create_manager/create_manager.php" type="submit" class="btn .button2 btn-block">Create Manager Account</a>
 			</form>
