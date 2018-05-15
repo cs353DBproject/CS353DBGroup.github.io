@@ -1,20 +1,8 @@
 <?php
-ob_start();
-  session_start();
-
-  $servername = "localhost";
-  $username = "serdar.erkal";
-  $password = "7ydo8hj2";
-  $dbname = "serdar_erkal";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password,$dbname);
-  // Check connection
-  if ($conn->connect_error) {
-     die("Connection failed: " . $conn->connect_error);
-  }
-  else{
-    "Connected successfully";
-  }
+	require '../config.php';
+	require '../utils.php';
+	$conn = acc_header();
+	
   $id = $_SESSION['id'];
   $_SESSION['id'] = $id;
 ?>
@@ -54,19 +42,24 @@ input[type=text] {
 </div>
 
 <?php
-  
-  $location_name = $_GET['search'];
   $loc_id;
   $number_of_checkin;
   $adre;
   $user_id;
-
-  $sql = "select id from Location where name = '".$location_name."' ;";
+  
+  $search = mysqli_real_escape_string($conn, $_GET["search"]);
+  $sql = "SELECT * FROM (SELECT * FROM location WHERE name = '$search') AS location LEFT JOIN (select loc_id, AVG(rate) AS avg_rate, COUNT(*) AS num_of_checkin FROM checkin GROUP BY loc_id) AS avg_rates ON location.id = avg_rates.loc_id";
+  $loc;
   $result = $conn->query($sql);
   if($result->num_rows > 0){
     while($row = $result->fetch_assoc() ){
       $loc_id = $row['id'];
+	  $loc = $row;
     }
+  }
+  else {
+	header("Location: ../main_page/main_page.php");
+	exit();
   }
   $sql = "select id from GeneralUser where username = '".$id."' ;";
   $result = $conn->query($sql);
@@ -77,11 +70,11 @@ input[type=text] {
   }
   
   $sql1;
-  $date = date('Y-m-d H:i:s',strtotime(date("Y-m-d H:i:s"))+150);
-  $comment = $_POST['fname'];
-  $rate = $_POST['frate'];
   if (isset($_POST['check_button'])){
-    $sql1 = " insert into Checkin (loc_id, time , text, rate ,user_id, num_of_likes) values ('".$loc_id."', '".$date."', '".$comment."' , '".$rate."','".$user_id."' , '12123123') ;";
+    $date = date('Y-m-d H:i:s',strtotime(date("Y-m-d H:i:s"))+150);
+    $comment = $_POST['fname'];
+    $rate = $_POST['frate'];
+    $sql1 = " insert into Checkin (loc_id, time , text, rate ,user_id) values ('".$loc_id."', '".$date."', '".$comment."' , '".$rate."','".$user_id."') ;";
   $result = $conn->query($sql1);
   }
 
@@ -111,15 +104,15 @@ input[type=text] {
 <div class="rectangle">
   <div class="column left" style="background-color:#aaa;">
     <img src="images/first.jpg">
-    <font style="color:red;">Rate:  4.3</font><br>
-    <font style="color:red;">Number of Checkin: 123</font>
+    <font style="color:red;">Rate:  <?php echo $loc['avg_rate']; ?></font><br>
+    <font style="color:red;">Number of Checkins: <?php echo $loc['num_of_checkin']; ?></font>
   </div>
   <div class="column right" style="background-color:#bbb;">
-    <h2><?php echo $_GET['search']; ?></h2>
-    <p> info: <?php echo $info; ?></p>,
-    <p> address: <?php echo $address; ?></p>
+    <h2><?php echo $search; ?></h2>
+    <p> info: <?php echo $loc['info']; ?></p>,
+    <p> address: <?php echo $loc['address']; ?></p>
   </div>
-  <form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+  <form class= "form-container" role = "form" method = "post">
   <label style="color:red;" for="fname"><br>&emsp;Enter Comment: </label><br> <br>
       &emsp;<input type="text" name="fname" placeholder="Comment..">
   <br>
@@ -148,7 +141,7 @@ slider.oninput = function() {
 
 <?php
 
-  $sql = "select * from Checkin where loc_id = '".$loc_id."' order by time asc;";
+  $sql = "select * from (select * from Checkin where loc_id = '".$loc_id."' order by time asc) as checkin left join (select checkin_id, count(*) as num_of_likes from checkin_likes group by checkin_id) as checkin_likes on checkin.id = checkin_likes.checkin_id";
   $result = $conn->query($sql);
   if($result->num_rows == 0)
     echo "<p> There is no check-in</p>";
@@ -167,9 +160,9 @@ slider.oninput = function() {
         echo "<img src="."images/elon.png".">";
         echo "</div>";
         echo "<div class="."column_1 right1"." style="."background-color:#black;".">";
-        echo "<a href="."../check_in_comment/check_in_comment.php?var=".$row['id']."&var2=".$row['user_id'].""."><font size="."5".">".$checker_name." Has checked-in: ".$location_name."</font></a>
+        echo "<a href="."../check_in_comment/check_in_comment.php?var=".$row['id']."&var2=".$row['user_id'].""."><font size="."5".">".$checker_name." Has checked-in: ".$search."</font></a>
         &emsp;<p>".$checker_name."'s comment: ".$row['text']."</p><br>
-        <p>".$row['time'].".&emsp;&emsp;&emsp;report button&emsp;&emsp; number of like: ".$row['num_of_likes']."</p>";
+        <p>".$row['time'].".&emsp;&emsp;&emsp;Number of Likes: ".$row['num_of_likes']."</p>";
         echo "</div>";
       echo "</div>";
       echo "<hr class=style1  width=60%> ";

@@ -1,32 +1,40 @@
 <?php
-ob_start();
-  session_start();
+	require '../config.php';
+	session_start();
+	
+	// Create connection
+	$conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD);
 
-  $servername = "localhost";
-  $username = "serdar.erkal";
-  $password = "7ydo8hj2";
-  $dbname = "serdar_erkal";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password,$dbname);
-  // Check connection
-  if ($conn->connect_error) {
-     die("Connection failed: " . $conn->connect_error);
-  }
-  else{
-    "Connected successfully";
-  }
-  $email = $_POST['email'];
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $answer = $_POST['answer'];
-  $secondary = $_POST['secondary'];
-  $role = $_POST['role'];
-  $birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
-  $date = date("Y/m/d");
+	// Check connection
+	if ($conn->connect_error) {
+		if(CFG_DEBUG)
+			die('An error occurred while connection database : ' . $conn->connect_error);
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
+	
+	mysqli_select_db($conn, DB_DATABASE);
 
   if (isset($_POST['signup_button'])){
-    $sql = " insert into GeneralUser (username , email, password ,secret_question, answer) values ('".$username."','".$email."', '".$password."', '1' , '".$answer."') ;";
+	$email = $_POST['email'];
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$squestion = mysqli_real_escape_string($conn, $_POST['squestion']);
+	$answer = $_POST['answer'];
+	$secondary = $_POST['secondary'];
+	$role = $_POST['role'];
+	$birth_date = date('Y-m-d', strtotime($_POST['birth_date']));
+	$date = date("Y/m/d");
+  
+    $sql = " insert into GeneralUser (username , email, password ,secret_question, answer) values ('".$username."','".$email."', '".$password."', '".$squestion."' , '".$answer."') ;";
   	$result = $conn->query($sql);
+	
+	if(!$result) {
+		if(CFG_DEBUG)
+			die('An error occurred while trying to create an account : ' . mysqli_error($conn));
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
 
   	$sql = " select id from GeneralUser where username = '".$username."' ";
   	$result = $conn->query($sql);
@@ -37,6 +45,17 @@ ob_start();
 				}
   	$sql = " insert into LocationAdmin (user_id, role, secondary_email) values ('".$new_id."', '".$role."', '".$secondary."') ;";
   	$result = $conn->query($sql);
+	
+	if(!$result) {
+		if(CFG_DEBUG)
+			die('An error occurred while trying to add account as manager : ' . mysqli_error($conn));
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
+	
+	$_SESSION["id"] = $username;
+	header("Location: ../main_page/main_page.php");
+	exit();
   }
 ?>
 
@@ -57,7 +76,7 @@ ob_start();
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
 			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+			<form class= "form-container" role = "form" method = "post">
 			<h1 align="center"> Create Account</h1>
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>
@@ -74,6 +93,17 @@ ob_start();
 			  <div class="form-group">
 				<label for="exampleInputPassword1">Repeat Password</label>
 				<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+			  </div>
+			  <div class="form-group">
+				<label for="squestion">Secret Question</label>
+				<select name="squestion" class="form-control">
+					<option value="0">What is the name of your last school?</option>
+					<option value="1">What is the name of your pet?</option>
+				</select>
+			  </div>
+			  <div class="form-group">
+				<label for="exampleInputPassword1">Secret Question Answer</label>
+				<input type="input" name = "answer" class="form-control" id="exampleInputPassword1" placeholder="Answer">
 			  </div>
 			  <div class="form-group">
 				<label for="exampleInputPassword1">Role</label>

@@ -1,22 +1,8 @@
 <?php
-   ob_start();
-   session_start();
-
-   $servername = "localhost";
-  $username = "serdar.erkal";
-  $password = "7ydo8hj2";
-  $dbname = "serdar_erkal";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password,$dbname);
-
-
-  // Check connection
-  if ($conn->connect_error) {
-     die("Connection failed: " . $conn->connect_error);
-  }
-  else{
-  	echo 'conn success';
-  }
+	require '../config.php';
+	require '../utils.php';
+	$conn = acc_header();
+	
   $admin_user = $_SESSION['admin_name'];
   $_SESSION['admin_name'] = $admin_user;
   echo $admin_user;

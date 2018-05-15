@@ -1,23 +1,25 @@
 <?php
-  ob_start();
-  session_start();
-
-  $servername = "localhost";
-  $username = "serdar.erkal";
-  $password = "7ydo8hj2";
-  $dbname = "serdar_erkal";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password,$dbname);
-  // Check connection
-  if ($conn->connect_error) {
-     die("Connection failed: " . $conn->connect_error);
-  }
-  else{
-    "Connected successfully";
-  }
-
-$id = $_SESSION['id'];
-$_SESSION['id'] = $id;
+	require '../config.php';
+	require '../utils.php';
+	$conn = acc_header();
+	$acc = get_acc($conn);
+	
+	if(!isset($_GET["search"])) {
+		header("Location: index.php");
+		exit();
+	}
+	
+	$search = mysqli_real_escape_string($conn, $_GET["search"]);
+	//$query = "SELECT * FROM location WHERE name LIKE '%$search%'";
+	$query = "SELECT * FROM (SELECT * FROM location WHERE name LIKE '%$search%') AS location LEFT JOIN (select loc_id, AVG(rate) AS avg_rate FROM checkin GROUP BY loc_id) AS avg_rates ON location.id = avg_rates.loc_id";
+	$result = $conn->query($query);
+	
+	if(!$result) {
+		if(CFG_DEBUG)
+			die('An error occurred while getting search results : ' . mysqli_error($conn));
+		else
+			die('An error occurred. We will look at it as soon as possible!');
+	}
 ?>
 
 <!DOCTYPE html>
@@ -43,27 +45,24 @@ $_SESSION['id'] = $id;
 </div>
 
 <div st mhyle="padding-left:16px">
-  <h2>&emsp;&emsp;You Searched: <?php echo $_GET['search']; ?></h2>  <!-- there will be php database content-->
+  <h2>&emsp;&emsp;You Searched: <?php echo htmlspecialchars($_GET['search']); ?></h2>
 </div>
-
-<script type="text/javascript">
-  for (i = 0; i < 5; i++) { 
-      document.write("<div class="+'rectangle'+">");
-      document.write("<div class="+'column left'+" style="+'background-color:#aaa;'+">");
-      document.write("<img src="+'images/elon.png'+">");
-      document.write("</div>");
-      document.write("<div class="+'column right'+" style="+'background-color:#black;'+">");
-      document.write("<a href="+'../location/location.php?search=<?php echo $_GET['search']; ?>'+"><font size="+'5'+"><?php echo $_GET['search']; ?></font></a>");
-      document.write("&emsp;<p>Location information Location information Location information</p><br>");
-      document.write("<p>Report&emsp;&emsp;&emsp;number of like: </p>");
-      document.write("</div>");
-      document.write("</div>");
-      document.write("<hr class=style1  width=60%> ");
-  }
-    
-</script>
-
-
-
+<?php
+	while($row = $result->fetch_assoc()) {
+?>
+<div class="rectangle">
+    <div class="column left" style="background-color:#aaa;">
+		<img src="images/elon.png">
+    </div>
+    <div class="column right" style="background-color:#black;">
+		<a href="../location/location.php?search=<?php echo $row['name']; ?>"><font size="5"><?php echo $row['name']; ?></font></a>
+		&emsp;<p><?php echo $row['info']; ?></p><br>
+		<p>Rating: <?php echo $row['avg_rate']; ?></p>
+		</div>
+</div>
+<hr class="style1"  width=60%>
+<?php
+	}
+?>
 </body>
 </html>

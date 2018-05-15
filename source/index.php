@@ -1,28 +1,32 @@
 <?php
-   ob_start();
-   session_start();
-
-   $servername = "localhost";
-	$username = "serdar.erkal";
-	$password = "7ydo8hj2";
-	$dbname = "serdar_erkal";
+	require 'config.php';
+	session_start();
+	
+	if(isset($_SESSION["id"])) {
+		header("Location: main_page/main_page.php");
+		exit();
+	}
+	
 	// Create connection
-	$conn = new mysqli($servername, $username, $password,$dbname);
-
+	$conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD);
 
 	// Check connection
 	if ($conn->connect_error) {
- 	   die("Connection failed: " . $conn->connect_error);
+		if(CFG_DEBUG)
+			die('An error occurred while connection database : ' . $conn->connect_error);
+		else
+			die('An error occurred. We will look at it as soon as possible!');
 	}
+	
+	mysqli_select_db($conn, DB_DATABASE);
+	
             if (isset($_POST['login']) && !empty($_POST['email']) 
                && !empty($_POST['password'])) {
 
                echo checkUser($_POST['email'],$_POST['password'],$conn);
                if ($_POST['password'] == checkUser($_POST['email'],$_POST['password'],$conn)) {
-                                    
-                  echo 'You have entered valid username and password';
-                  header("Location:/~serdar.erkal/main_page/main_page.php");
-                  exit;
+                  header("Location: main_page/main_page.php");
+                  exit();
                }
                else {
                   echo 'Wrong username or password';
@@ -36,7 +40,7 @@
                if ($_POST['password'] == checkUser($_POST['email'],$_POST['password'],$conn)) {
                                     
                   echo 'You have entered valid username and password';
-                  header("Location:/~serdar.erkal/admin_page/admin_page.php");
+                  header("Location: admin_page/admin_page.php");
                   exit;
                }
                else {
@@ -85,7 +89,7 @@
 			<div class = "col-md-4 col-sm-4 col-xs-12"><div class="login-image"></div>​</div>
 			<div class = "col-md-4 col-sm-4 col-xs-12">
 			
-			<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post">
+			<form class= "form-container" role = "form" method = "post">
 			<h1 align="center"> Login</h1>
 			  <div class="form-group">
 				<label for="exampleInputEmail1">Email address</label>
@@ -98,9 +102,9 @@
 			  		  <!--- href="./main_page/main_page.html"-->
 			  <button class = "btn btn-success btn-block" type = "submit" name = "login">Login</button>
 			  <button class = "btn btn-success btn-block" type = "submit" name = "login_admin">Login as Admin</button>
-			  <a href="./forgot_1/forgot_1.php" type="submit" class="btn .button1 btn-block">Forgot Password</a>
-			  <a href="./create_account/create_account.php" type="submit" class="btn .button2 btn-block">Create Account</a>
-			  <a href="./create_manager/create_manager.php" type="submit" class="btn .button2 btn-block">Create Manager Account</a>
+			  <a href="forgot_1/forgot_1.php" type="submit" class="btn .button1 btn-block">Forgot Password</a>
+			  <a href="create_account/create_account.php" type="submit" class="btn .button2 btn-block">Create Account</a>
+			  <a href="create_manager/create_manager.php" type="submit" class="btn .button2 btn-block">Create Manager Account</a>
 			</form>
 			
 			</div>

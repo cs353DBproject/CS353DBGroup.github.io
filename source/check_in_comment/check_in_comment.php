@@ -1,21 +1,8 @@
 <?php
-  ob_start();
-  session_start();
-
-  $servername = "localhost";
-  $username = "serdar.erkal";
-  $password = "7ydo8hj2";
-  $dbname = "serdar_erkal";
-  // Create connection
-  $conn = new mysqli($servername, $username, $password,$dbname);
-  // Check connection
-  if ($conn->connect_error) {
-     die("Connection failed: " . $conn->connect_error);
-  }
-  else{
-    "Connected successfully";
-  }
-
+	require '../config.php';
+	require '../utils.php';
+	$conn = acc_header();
+	
   $id = $_SESSION['id'];
   $_SESSION['id'] = $id;
   $check_in_id = $_GET['var'];
@@ -86,7 +73,7 @@ input[type=submit]:hover {
 </div>
 
 <?php
-  $sql = "select * from Checkin where id = '".$check_in_id."';";
+  $sql = "select * from (select * from Checkin where id = ".$check_in_id.") as checkin join (select checkin_id, count(*) as num_of_likes from checkin_likes group by checkin_id) as checkin_likes on checkin.id = checkin_likes.checkin_id";
   $result = $conn->query($sql);
   if($result->num_rows > 0){
     while($row = $result->fetch_assoc() ){
@@ -113,7 +100,7 @@ input[type=submit]:hover {
         echo "<div class="."column right"." style="."background-color:#black;".">";
         echo "<a><font size="."5".">".$checker_name." Has checked-in: ".$checkin_location."</font></a>
         &emsp;<p>".$checker_name."'s comment: ".$row['text']."</p><br>
-        <p>".$row['time'].".&emsp;&emsp;&emsp;report button&emsp;&emsp; number of like: ".$row['num_of_likes']."</p>";
+        <p>".$row['time'].".&emsp;&emsp;&emsp; Number of like: ".$row['num_of_likes']."</p>";
         echo "</div>";
       echo "</div>";
       echo "<hr class=style1  width=60%> ";
@@ -130,7 +117,7 @@ input[type=submit]:hover {
   $result = $conn->query($sql);
   if($result->num_rows > 0){
     while($row = $result->fetch_assoc() ){
-      $sql1 = "select * from Comment where id = '".$row['comment_id']."';";
+      $sql1 = "select * from (select * from Comment where id = ".$row['comment_id'].") as comment join (select comment_id, count(*) as num_of_likes from comment_likes group by comment_id) as comment_likes on comment.id = comment_likes.comment_id";
       $result1 = $conn->query($sql1);
       if($result1->num_rows > 0){
         while($row1 = $result1->fetch_assoc() ){
@@ -147,7 +134,23 @@ input[type=submit]:hover {
                 echo "<div class="."column right"." style="."background-color:#black;".">";
                 echo "<a><font size="."5".">".$commenter_name." Has Commented: </font></a>
                 &emsp;<p>".$row1['text']."</p><br>
-                <p>".$row1['time'].".&emsp;&emsp;&emsp;report button&emsp;&emsp; number of like: DBCONT</p>";
+                <p>".$row1['time'].".&emsp;&emsp;&emsp;";
+				
+				$rc_query = "SELECT * FROM comment_reports WHERE user_id =$user_id and comment_id =".$row1['id'];
+				$rc_result = $conn->query($rc_query);
+				
+				if(!$rc_result) {
+					if(CFG_DEBUG)
+						die('An error occurred while checking reports : ' . mysqli_error($conn));
+					else
+						die('An error occurred. We will look at it as soon as possible!');
+				}
+				$rc_row = mysqli_fetch_array($rc_result);
+				
+				if($rc_result->num_rows < 1) {
+					echo "<a href=\"../report_comment.php?comment_id=".$row1['id']."\">Report</a>&emsp;&emsp;";
+				}
+				echo " Number of like: ".$row1['num_of_likes']."</p>";
                 echo "</div>";
               echo "</div>";
               echo "<hr class=style1  width=60%> ";
@@ -167,18 +170,18 @@ input[type=submit]:hover {
   */
 
   $date = date('Y-m-d H:i:s',strtotime(date("Y-m-d H:i:s"))+150);
-  $comment = $_POST['comment_text'];
   if (isset($_POST['submit_button'])){
-    $sql = " insert into Comment (user_id , text, time) values ('".$user_id."', '".$comment."', '".$date."') ;";
+    $comment = mysqli_real_escape_string($conn, $_POST['comment_text']);
+    $sql = " insert into Comment (user_id , text, time) values (".$user_id.", '".$comment."', '".$date."') ;";
     $result = $conn->query($sql);
-    $sql = " insert into checkin_comments (checkin_id , comment_id) values ('".$check_in_id."', LAST_INSERT_ID()) ;";
+    $sql = " insert into checkin_comments (checkin_id , comment_id) values (".$check_in_id.", LAST_INSERT_ID()) ;";
     $result = $conn->query($sql);
   }
 ?>
 
 
 
-<form class= "form-container" role = "form" action = "<?php echo htmlspecialchars($_SERVER['SELF']);?>" method = "post"><center>
+<form class= "form-container" role = "form" method = "post"><center>
     <input type="text" id="fname" name="comment_text" placeholder="Comment..">
     <input type="submit" name= "submit_button"  value="Submit Your Comment">
   </form>
